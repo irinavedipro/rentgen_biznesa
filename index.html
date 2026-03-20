@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рентген бизнеса</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes scan {
+            0% { transform: translateY(-100vh); opacity: 0; }
+            50% { opacity: 0.5; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+        
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #3b82f6, transparent);
+            box-shadow: 0 0 15px 2px #3b82f6;
+            z-index: 50;
+            pointer-events: none;
+            animation: scan 8s linear infinite;
+        }
+
+        .hero-image-overlay {
+            background: radial-gradient(circle at center, transparent 20%, #09090B 100%);
+        }
+
+        .glass-card {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(63, 63, 70, 0.4);
+        }
+
+        .node-accent { border-left: 2px solid #f59e0b; padding-left: 1rem; }
+        
+        .xray-glow {
+            box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.2);
+        }
+
+        body {
+            background-image: radial-gradient(circle at 50% 50%, #111115 0%, #09090B 100%);
+        }
+    </style>
+</head>
+<body class="min-h-screen text-zinc-100 font-sans selection:bg-blue-500/30">
+
+    <!-- Линия сканирования -->
+    <div class="scan-line text-blue-500"></div>
+
+    <header class="relative max-w-5xl mx-auto px-4 md:px-6 pt-20 md:pt-32 pb-12 md:pb-20 overflow-hidden">
+        <!-- Фоновое изображение рентгена -->
+        <div class="absolute top-0 right-0 w-full md:w-2/3 h-full opacity-40 pointer-events-none">
+            <img src="Без названия.jfif" alt="Рентген мозга" class="w-full h-full object-contain object-right-top mix-blend-lighten">
+            <div class="absolute inset-0 hero-image-overlay"></div>
+        </div>
+
+        <div class="relative z-10 space-y-6 md:space-y-8 max-w-2xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
+                <span class="relative flex h-2 w-2">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                </span>
+                Диагностика системы
+            </div>
+            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tighter text-white">Рентген бизнеса</h1>
+            <p class="text-lg md:text-2xl text-zinc-400 leading-relaxed font-light">
+                Ты не видишь, где у тебя проблема<br>
+                пока смотришь на бизнес «снаружи»<br>
+                <span class="inline-block mt-4 text-zinc-100 font-normal">👉 я показываю, что происходит на самом деле<br>и собираю решение</span>
+            </p>
+        </div>
+    </header>
+
+    <main class="max-w-3xl mx-auto px-4 md:px-6 pb-24">
+        
+        <!-- БЛОК 1 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500 hover:border-zinc-600 text-sm md:text-base">
+            <button onclick="toggleAccordion(1)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">01</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Точка А</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-1" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-1" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-8 text-zinc-400 leading-relaxed text-sm md:text-base">
+                            <div class="space-y-4">
+                                <p class="text-zinc-200 font-medium">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
+                                <p>Ты сейчас не в кризисе. Ты сейчас в системе, которая работает вот так:</p>
+                                <ul class="list-disc pl-5 space-y-3">
+                                    <li>ты постоянно закрываешь дыры</li>
+                                    <li>деньги приходят не из системы, а из напряжения</li>
+                                    <li>ты держишь всё на себе</li>
+                                    <li>у тебя есть люди, оборудование, ресурсы, но они не складываются в управляемую модель</li>
+                                </ul>
+                            </div>
+
+                            <div class="bg-blue-500/5 p-6 rounded-2xl node-accent border border-blue-500/10">
+                                <p class="font-medium text-zinc-100 mb-3 uppercase text-xs tracking-widest text-blue-400">И самое важное:</p>
+                                <div class="space-y-2">
+                                    <p>👉 ты каждый день действуешь</p>
+                                    <p>👉 но это не даёт тебе выхода</p>
+                                </div>
+                            </div>
+
+                            <p>Это не «плохо работает бизнес». Это другой уровень проблемы.</p>
+
+                            <div class="space-y-4">
+                                <p class="text-zinc-200 font-medium">Есть два состояния бизнеса</p>
+                                <div class="grid gap-4">
+                                    <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800/50">
+                                        <p class="text-zinc-100 font-medium mb-1">1. Когда ты управляешь системой</p>
+                                        <p class="text-xs opacity-70 italic">есть понятный поток клиентов, есть оборотка, есть решения на несколько шагов вперёд</p>
+                                    </div>
+                                    <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800/50">
+                                        <p class="text-zinc-100 font-medium mb-1 text-red-400">2. Когда ты тушишь пожары</p>
+                                        <p class="text-sm opacity-70 italic">нет запаса, всё завязано на тебе, решения принимаются из «надо срочно»</p>
+                                    </div>
+                                </div>
+                                <p>Ты сейчас во втором состоянии.</p>
+                            </div>
+
+                            <div class="border-t border-zinc-800 pt-8 space-y-4 text-sm md:text-base">
+                                <p class="text-zinc-200 font-medium">Почему это не заканчивается</p>
+                                <p>Ты сейчас пытаешься решить ситуацию действиями: найти клиентов, где-то занять деньги, что-то продать, договориться.</p>
+                                <p class="bg-zinc-900/60 p-4 rounded-xl border border-zinc-800/80 text-zinc-200">Но: 👉 это всё решения внутри той же системы</p>
+                                <p>А сама система устроена так, что: деньги приходят рывками, нет запаса, нет управляемого потока, ты — центр всего.</p>
+                            </div>
+
+                            <div class="bg-zinc-800/30 p-6 rounded-2xl border border-zinc-700/40">
+                                <p class="text-zinc-200 font-medium mb-3">📌 Это и есть уровень хаоса:</p>
+                                <ul class="list-disc pl-5 space-y-1">
+                                    <li>много действий</li>
+                                    <li>мало системы</li>
+                                    <li>решения из давления</li>
+                                </ul>
+                            </div>
+
+                            <div class="space-y-4">
+                                <p>Ты не застрял из-за рынка. Ты застрял потому что: 👉 ты продолжаешь управлять бизнесом так, как управлял, когда он был меньше и проще.</p>
+                                <p>И сейчас: масштаб уже больше, нагрузка больше, а логика управления — та же. 👉 и из-за этого система не собирается.</p>
+                            </div>
+
+                            <div class="space-y-2">
+                                <p>Ты одновременно: понимаешь, что нужно масштабироваться, понимаешь, что нужна система, ищешь РОПа, думаешь про инвестора.</p>
+                                <p class="text-zinc-200 font-medium">НО: 👉 по факту продолжаешь работать в режиме «сам всё разрулю».</p>
+                            </div>
+
+                            <div class="bg-zinc-950 p-6 rounded-2xl border border-blue-900/20 text-center font-mono text-sm tracking-tight text-blue-400">
+                                понимание есть → действия старые → результата нет → накапливается давление
+                            </div>
+
+                            <div class="pt-6">
+                                <p class="font-bold text-base md:text-lg text-white bg-blue-600/20 inline-block px-6 py-4 rounded-2xl border border-blue-500/30 xray-glow">
+                                    Итог блока 1: Ты в системе, которая не может дать другой результат.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 2 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
+            <button onclick="toggleAccordion(2)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">02</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Где ты сейчас на самом деле</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-2" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-2" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-10 text-zinc-400 leading-relaxed text-sm md:text-base">
+                            <p class="text-zinc-200 font-medium text-xl">Любой бизнес (и человек) проходит через три состояния:</p>
+                            
+                            <div class="grid gap-6">
+                                <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800/50 relative overflow-hidden group">
+                                    <div class="absolute -right-4 -top-4 w-24 h-24 bg-red-500/5 rounded-full blur-2xl"></div>
+                                    <p class="font-bold text-zinc-100 mb-4 text-xl tracking-wider flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                                        1. ХАОС
+                                    </p>
+                                    <div class="space-y-4">
+                                        <ul class="list-disc pl-5 space-y-2 text-sm md:text-base">
+                                            <li>постоянно что-то горит</li>
+                                            <li>решения принимаются «надо срочно»</li>
+                                            <li>деньги приходят рывками</li>
+                                            <li>нет запаса, всё держится на тебе</li>
+                                        </ul>
+                                        <div class="pt-4 border-t border-zinc-800/50">
+                                            <p class="text-[10px] uppercase tracking-widest text-zinc-500 mb-2 font-bold">Звуки хаоса:</p>
+                                            <p class="italic text-zinc-300 text-sm">«Надо сейчас как-то выкрутиться», «Где взять деньги», «Надо дожать».</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800/50 relative overflow-hidden group">
+                                    <p class="font-bold text-zinc-100 mb-4 text-xl tracking-wider flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                                        2. СТАБИЛИЗАЦИЯ
+                                    </p>
+                                    <p class="mb-4 text-sm md:text-base">Как это выглядит: есть понятный поток клиентов, есть оборотка, есть структура, решения из расчёта.</p>
+                                    <p class="text-blue-400 text-sm font-medium italic">👉 это уровень «собрал систему, она держится».</p>
+                                </div>
+
+                                <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800/50 relative overflow-hidden group">
+                                    <p class="font-bold text-zinc-100 mb-4 text-xl tracking-wider flex items-center gap-3">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                        3. РОСТ / СИСТЕМА
+                                    </p>
+                                    <p class="text-sm md:text-base">Бизнес работает не на тебе. Есть управляемая модель. Масштаб — это следствие системы.</p>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-zinc-800 pt-10">
+                                <p class="text-zinc-100 font-bold mb-4 text-2xl tracking-tighter">Где ты сейчас?</p>
+                                <p>Ты не просто в хаосе. Ты как будто между уровнями застрял. Почему: ты уже понимаешь, что нужна система, ты ищешь РОПа, ты думаешь про инвестора.</p>
+                                <p class="mt-4 font-bold text-white text-xl leading-snug">НО: 👉 действуешь ты всё равно как в хаосе.</p>
+                                <p class="text-zinc-400">У тебя голова уже в следующем уровне, а бизнес — в предыдущем.</p>
+                            </div>
+
+                            <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 xray-glow">
+                                <p class="text-zinc-200 font-medium mb-3">📌 И вот это и создаёт:</p>
+                                <ul class="list-disc pl-5 space-y-2 text-zinc-400">
+                                    <li>постоянное напряжение</li>
+                                    <li>ощущение «я могу больше, но не получается»</li>
+                                    <li>застревание</li>
+                                </ul>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="space-y-2">
+                                    <p class="text-zinc-500 uppercase text-[10px] tracking-widest font-bold">Диагноз:</p>
+                                    <p class="text-zinc-100 text-xl font-medium">Старая модель больше не тянет твой уровень.</p>
+                                </div>
+                                <p>Проблема не в том, что нет клиентов или людей. Проблема в том, что: 👉 <span class="text-white font-medium">у тебя нет уровня системы, которая может это удержать.</span></p>
+                            </div>
+
+                            <div class="pt-6">
+                                <p class="font-bold text-base md:text-lg text-white bg-blue-600/20 inline-block px-6 py-4 rounded-2xl border border-blue-500/30 xray-glow">
+                                    Итог блока 2: тебе нужна другая логика бизнеса
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 3 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
+            <button onclick="toggleAccordion(3)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">03</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Почему это не решается действиями</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-3" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-3" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-10 text-zinc-400 leading-relaxed text-sm md:text-base">
+                            <div class="space-y-6">
+                                <p>Ты сейчас пытаешься решить ситуацию через действия: найти клиентов, нанять людей, вложиться в рекламу. 👉 <span class="text-zinc-200">Но это всё — один и тот же уровень.</span></p>
+                                <div class="bg-amber-500/10 border border-amber-500/20 p-8 rounded-3xl relative overflow-hidden">
+                                    <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-amber-500/5 rounded-full blur-3xl"></div>
+                                    <p class="font-bold text-amber-500 text-2xl uppercase tracking-tighter mb-3">💥 Ключевая мысль</p>
+                                    <p class="text-zinc-100 text-lg leading-snug">Ты пытаешься решить системную проблему операционными действиями.</p>
+                                </div>
+                            </div>
+
+                            <p>Даже если сейчас тебе дать клиентов — ситуация не стабилизируется. Ты их не сможешь системно обработать, деньги снова уйдут в дыры. 👉 и ты вернёшься туда же.</p>
+
+                            <div class="node-accent border-blue-500/50">
+                                <p class="text-zinc-200 font-medium text-lg">Ты сейчас не управляешь бизнесом — ты его удерживаешь.</p>
+                                <p class="mt-2 text-zinc-400 italic">НО: ты её используешь, чтобы выживать, а не строить.</p>
+                            </div>
+
+                            <div class="bg-zinc-900/80 p-8 rounded-3xl border border-zinc-700/50 text-center space-y-8">
+                                <div class="space-y-2 text-sm md:text-base">
+                                    <p class="text-zinc-500 uppercase text-[10px] tracking-widest font-bold">Решение:</p>
+                                    <p class="text-zinc-200">Тебе сейчас не нужен маркетинг, РОП или инвестор. Тебе нужно понять, какая модель бизнеса должна быть дальше.</p>
+                                </div>
+                                <div class="bg-white text-zinc-950 p-6 rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.1)]">
+                                    <p class="font-black text-xl md:text-2xl uppercase tracking-tighter">Важно: тебе надо пересобрать бизнес</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 4 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
+            <button onclick="toggleAccordion(4)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">04</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Есть точка, где это можно собрать</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-4" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-4" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-10 text-zinc-400 leading-relaxed text-sm md:text-base">
+                            <p class="text-lg">То, что мы сейчас разобрали — это не про «подкрутить что-то» 👉 это про то, что твой бизнес в старой логике, которая больше не даёт результата. <span class="text-zinc-100">Это собирается только целиком.</span></p>
+                            
+                            <div class="space-y-6">
+                                <p class="text-zinc-500 uppercase text-[10px] tracking-widest font-bold">Этапы сборки:</p>
+                                <div class="grid gap-3">
+                                    <div class="flex gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800/60">
+                                        <span class="text-blue-500 font-bold">1</span>
+                                        <p><span class="text-zinc-100 font-medium italic">Модель на самом деле.</span> Не «пиломатериалы», а экономическая модель.</p>
+                                    </div>
+                                    <div class="flex gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800/60">
+                                        <span class="text-blue-500 font-bold">2</span>
+                                        <p><span class="text-zinc-100 font-medium italic">Точки излома.</span> Где теряются деньги и где ты «бутылочное горлышко».</p>
+                                    </div>
+                                    <div class="flex gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800/60">
+                                        <span class="text-blue-500 font-bold">3</span>
+                                        <p><span class="text-zinc-100 font-medium italic">Новая архитектура.</span> Как приходят деньги и как устроена структура.</p>
+                                    </div>
+                                    <div class="flex gap-4 p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800/60">
+                                        <span class="text-blue-500 font-bold">4</span>
+                                        <p><span class="text-zinc-100 font-medium italic">Фиксация.</span> Чтобы ты управлял, а не «разгребал».</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-blue-600/20 p-8 rounded-3xl border border-blue-500/20 xray-glow text-center">
+                                <p class="text-zinc-100 font-medium text-xl leading-snug">Ты в точке выбора: либо продолжать держать всё самому до последнего, либо один раз собрать систему и расти из неё.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 5 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
+            <button onclick="toggleAccordion(5)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">05</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Чёткие действия</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-5" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-5" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-12 text-zinc-400 leading-relaxed text-sm md:text-base">
+                            <div class="flex flex-col items-center text-center space-y-4 pt-4">
+                                <p class="text-blue-500 font-bold uppercase tracking-[0.3em] text-xs">🔥 БЛОК 5 — ЧЁТКИЕ ДЕЙСТВИЯ</p>
+                                <p class="text-zinc-100 text-xl font-light">Конкретные решения под твою ситуацию. Без теории.</p>
+                            </div>
+
+                            <!-- 5.1 Фокус -->
+                            <div class="space-y-6">
+                                <p class="text-zinc-100 font-bold text-2xl tracking-tight flex items-center gap-3 font-bold">
+                                    <span class="text-blue-500">🧱</span> 1. ФОКУС
+                                </p>
+                                <p>У тебя сейчас 4–5 направлений, которые тянут ресурс. 👉 <span class="text-white font-medium">Нужно выбрать одно, которое быстрее всего превращается в деньги.</span></p>
+                                <div class="bg-zinc-900/60 p-6 rounded-3xl border border-zinc-800/80">
+                                    <p class="text-blue-400 font-medium mb-3 italic">Твой рычаг: сухой строганный пиломатериал.</p>
+                                    <p class="text-sm">Почему: есть производство, есть спрос «здесь и сейчас». Быстрее, чем стройка и посёлок.</p>
+                                </div>
+                                <p class="text-sm italic">💥 Суть: просто зафиксировать один поток денег.</p>
+                            </div>
+
+                            <!-- 5.2 Деньги -->
+                            <div class="space-y-6">
+                                <p class="text-zinc-100 font-bold text-2xl tracking-tight flex items-center gap-3 font-bold">
+                                    <span class="text-blue-500">🧱</span> 2. ДЕНЬГИ
+                                </p>
+                                <p>Тебе нужно 5 000 000 – 7 000 000 руб. на оборотку. 👉 <span class="text-white font-medium">Нужно перевернуть модель.</span></p>
+                                <p>Вместо «сначала вкладываешь → потом продаёшь», перейди на продажу под заказ с предоплатой. Важна скорость возврата денег.</p>
+                            </div>
+
+                            <!-- 5.3 Продажи -->
+                            <div class="space-y-6">
+                                <p class="text-zinc-100 font-bold text-2xl tracking-tight flex items-center gap-3 font-bold">
+                                    <span class="text-blue-500">🧱</span> 3. ПРОДАЖИ И ИИ
+                                </p>
+                                <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 text-center font-mono text-blue-500 text-sm">
+                                    ЛИД → ЦЕНА/СРОК → ЗВОНОК → ОПЛАТА
+                                </div>
+                                <p>Используй ChatGPT для обработки частых вопросов и генерации объявлений.</p>
+                            </div>
+
+                            <!-- Стратегии -->
+                            <div class="bg-zinc-950/80 border border-zinc-800 rounded-[2.5rem] p-8 md:p-12 space-y-10 relative overflow-hidden">
+                                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500 opacity-50"></div>
+                                <p class="text-white font-black text-3xl tracking-tighter text-center uppercase">⚡️ Три стратегии</p>
+                                <div class="grid gap-8">
+                                    <div class="flex gap-6 items-start">
+                                        <div class="w-4 h-4 rounded-full bg-red-500 mt-2 shrink-0 xray-glow shadow-red-500/40"></div>
+                                        <div>
+                                            <p class="text-zinc-100 font-bold text-lg mb-1">0–2 месяца: Вытащить деньги</p>
+                                            <p class="text-sm">1 продукт, 1 аудитория, забить площадки, разгрузить себя ИИ.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-6 items-start">
+                                        <div class="w-4 h-4 rounded-full bg-amber-500 mt-2 shrink-0 xray-glow shadow-amber-500/40"></div>
+                                        <div>
+                                            <p class="text-zinc-100 font-bold text-lg mb-1">2–6 месяцев: Стабилизация</p>
+                                            <p class="text-sm">Зафиксировать поток, собрать простую модель продаж, выйти в оборотку.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex gap-6 items-start">
+                                        <div class="w-4 h-4 rounded-full bg-emerald-500 mt-2 shrink-0 xray-glow shadow-emerald-500/40"></div>
+                                        <div>
+                                            <p class="text-zinc-100 font-bold text-lg mb-1">6+ месяцев: Масштаб</p>
+                                            <p class="text-sm">Упаковать модель, выстроить систему, подключать инвестора.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- БЛОК 6 -->
+        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500 border-blue-500/20">
+            <button onclick="toggleAccordion(6)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
+                <div class="flex items-center gap-5">
+                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-600 text-white font-bold text-lg shrink-0 shadow-[0_0_15px_rgba(37,99,235,0.4)]">06</div>
+                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Платный пакет</h2>
+                </div>
+                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
+                    <svg id="icon-6" class="w-5 h-5 text-zinc-400 transition-transform duration-300" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                </div>
+            </button>
+            <div id="content-6" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
+                <div class="overflow-hidden">
+                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50">
+                        <div class="space-y-10 text-zinc-400 leading-relaxed pt-6 text-sm md:text-base">
+                            <div class="space-y-4 text-center md:text-left">
+                                <h3 class="text-2xl font-bold text-white tracking-tighter uppercase leading-tight">Рентген твоего бизнеса</h3>
+                                <p>За 3–4 часа покажу, где у тебя деньги, где потери и соберу понятную модель. Это работа в формате навигационной сессии.</p>
+                            </div>
+                            
+                            <div class="bg-blue-600/5 p-8 rounded-3xl border border-blue-500/10 space-y-4 text-center">
+                                <p class="text-zinc-100 font-medium">👉 Ты получаешь структурированный документ и решение под твою ситуацию.</p>
+                            </div>
+
+                            <div class="relative mt-8 w-full overflow-hidden rounded-[3rem] border border-blue-500/20 bg-zinc-950 shadow-2xl shadow-blue-500/10">
+                                <div class="absolute inset-0 opacity-10 pointer-events-none">
+                                    <img src="Без названия.jfif" class="w-full h-full object-cover grayscale opacity-30">
+                                </div>
+                                <div class="relative z-10 p-8 md:p-12 flex flex-col items-center text-center">
+                                    <div class="w-16 h-16 bg-blue-600/20 rounded-2xl flex items-center justify-center mb-6 border border-blue-500/30 xray-glow">
+                                        <svg class="w-8 h-8 text-blue-400" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-white mb-3 tracking-tight">Полная диагностика</h3>
+                                    <p class="text-zinc-500 mb-10 max-w-sm italic text-xs md:text-sm">Это не информация. Это решение под твою ситуацию.</p>
+                                    <div class="text-[10px] text-zinc-500 mb-2 uppercase tracking-[0.3em] font-bold">Инвестиция</div>
+                                    <div class="text-4xl font-black text-white mb-10 tracking-tighter">50 000 руб.</div>
+                                    <button onclick="openModal()" class="w-full max-w-xs bg-white text-zinc-950 px-8 py-5 text-sm md:text-base font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all shadow-[0_10px_30px_rgba(255,255,255,0.1)] active:scale-95">
+                                        Получить доступ
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Модальное окно -->
+    <div id="payment-modal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 bg-[#09090B]/95 backdrop-blur-md transition-opacity">
+        <div class="bg-zinc-900 border border-zinc-800 max-w-lg w-full rounded-[2.5rem] shadow-2xl overflow-hidden relative xray-glow">
+            <button onclick="closeModal()" class="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors bg-zinc-800/50 rounded-full">
+                <svg class="w-5 h-5" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+            <div class="p-8 md:p-12">
+                <h3 class="text-2xl font-bold text-white mb-8 tracking-tighter text-center">Оформление доступа</h3>
+                <div class="space-y-6 text-zinc-300 text-sm md:text-base leading-relaxed">
+                    <div class="space-y-4">
+                        <p>Я работаю как самозанятая. Оплату принимаю переводом на карту Т-Банка:</p>
+                        <div class="bg-zinc-950 border border-zinc-800 p-5 rounded-2xl text-center">
+                            <p class="text-white font-mono text-lg tracking-wider mb-1">2200 7021 1957 4882</p>
+                            <p class="text-zinc-500 text-xs">Вединеева Ирина Михайловна</p>
+                        </div>
+                        <p class="text-amber-500/80 text-xs font-medium italic">Предложение действует до 25.03.2026</p>
+                    </div>
+
+                    <div class="space-y-4 border-t border-zinc-800 pt-6">
+                        <div>
+                            <p class="text-zinc-100 font-medium mb-2">После оплаты я отправляю:</p>
+                            <ul class="list-none space-y-1 pl-4 border-l border-zinc-700/50">
+                                <li>— чек</li>
+                                <li>— договор</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="text-zinc-100 font-medium mb-2">Далее мы согласовываем:</p>
+                            <ul class="list-none space-y-1 pl-4 border-l border-zinc-700/50">
+                                <li>— дату навигационной сессии</li>
+                                <li>— техническое задание</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 pt-6 border-t border-zinc-800 text-center">
+                    <p class="text-zinc-500 text-[10px] md:text-xs uppercase tracking-widest font-bold">Чек об оплате пришлите в ответном сообщении.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Кнопка наверх -->
+    <button id="scroll-top" onclick="scrollToTop()" class="fixed bottom-8 right-8 p-4 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-2xl shadow-2xl translate-y-32 opacity-0 transition-all duration-700 z-40 backdrop-blur-xl hover:bg-blue-600/20 active:scale-90">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m18 15-6-6-6 6"/></svg>
+    </button>
+
+    <script>
+        function toggleAccordion(id) {
+            const content = document.getElementById('content-' + id);
+            const icon = document.getElementById('icon-' + id);
+            const isOpen = !content.classList.contains('grid-rows-[0fr]');
+            
+            // Закрываем все
+            document.querySelectorAll('[id^="content-"]').forEach(el => {
+                el.classList.add('grid-rows-[0fr]', 'opacity-0');
+                el.classList.remove('grid-rows-[1fr]', 'opacity-100');
+            });
+            document.querySelectorAll('[id^="icon-"]').forEach(el => el.classList.remove('rotate-180'));
+
+            // Открываем текущий если был закрыт
+            if (!isOpen) {
+                content.classList.remove('grid-rows-[0fr]', 'opacity-0');
+                content.classList.add('grid-rows-[1fr]', 'opacity-100');
+                icon.classList.add('rotate-180');
+            }
+        }
+
+        function openModal() { 
+            const modal = document.getElementById('payment-modal');
+            modal.classList.remove('hidden'); 
+            modal.classList.add('flex'); 
+        }
+        function closeModal() { 
+            const modal = document.getElementById('payment-modal');
+            modal.classList.add('hidden'); 
+            modal.classList.remove('flex'); 
+        }
+        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top');
+            if (window.scrollY > 500) {
+                btn.classList.remove('translate-y-32', 'opacity-0');
+                btn.classList.add('translate-y-0', 'opacity-100');
+            } else {
+                btn.classList.add('translate-y-32', 'opacity-0');
+                btn.classList.remove('translate-y-0', 'opacity-100');
+            }
+        });
+    </script>
+</body>
+</html>
