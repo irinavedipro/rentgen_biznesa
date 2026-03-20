@@ -1,45 +1,71 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronDown, Lock, ArrowUp, ArrowRight, ShieldCheck, X, Image as LucideImage } from 'lucide-react';
 
-const CONTENT = {
-  hero: {
-    title: "Рентген бизнеса",
-    subtitle: "Ты не видишь, где у тебя проблема, пока смотришь на бизнес «снаружи». Я показываю, что происходит на самом деле, и собираю решение под тебя.",
-    buttonText: "Разобрать мою ситуацию",
-    buttonLink: "https://wa.me/79877299259" 
-  },
-  blocks: [
+// Иконки через SVG для 100% гарантии отображения
+const IconChevron = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+);
+const IconLock = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+);
+const IconArrowUp = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
+);
+const IconArrowRight = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+);
+const IconShield = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+);
+const IconX = ({ className }) => (
+  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+);
+
+export default function App() {
+  const [openBlocks, setOpenBlocks] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const toggleBlock = (id) => {
+    setOpenBlocks(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const blocks = [
     {
       id: 1,
       title: "Точка А",
       content: (
-        <div className="space-y-4 text-zinc-400 leading-relaxed">
-          <p className="font-medium text-lg text-zinc-200">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
+        <div className="space-y-4 text-zinc-400">
+          <p className="font-medium text-lg text-zinc-200 tracking-tight">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
           <p>Ты сейчас не в кризисе. Ты сейчас в системе, которая работает вот так: ты постоянно закрываешь дыры.</p>
           <ul className="list-disc pl-5 space-y-2">
             <li>деньги приходят не из системы, а из напряжения</li>
             <li>ты держишь всё на себе</li>
             <li>у тебя есть люди, оборудование, ресурсы, но они не складываются в управляемую модель</li>
           </ul>
-          <div className="pt-2 bg-zinc-800/40 p-5 rounded-2xl border-l-2 border-blue-500 mt-6 shadow-lg">
-            <p className="font-medium text-zinc-200 mb-2">И самое важное:</p>
-            <p className="text-zinc-100">ты каждый день действуешь, но это не даёт тебе выхода.</p>
+          <div className="bg-blue-600/10 p-6 rounded-2xl border-l-4 border-blue-500 my-6">
+            <p className="font-medium text-zinc-100 mb-2 italic">И самое важное:</p>
+            <p className="text-zinc-200">ты каждый день действуешь, но это не даёт тебе выхода.</p>
           </div>
-          <p className="pt-4 italic">Это не «плохо работает бизнес». Это другой уровень проблемы.</p>
-          <div className="space-y-4 mt-6">
-            <p className="font-medium text-zinc-200 uppercase text-xs tracking-widest opacity-60">Есть два состояния бизнеса:</p>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800 hover:border-blue-500/30 transition-colors text-left">
-                <p className="text-blue-400 font-bold mb-2 text-sm uppercase">1. Управление системой</p>
-                <p className="text-xs">Есть понятный поток клиентов, оборотка и решения на несколько шагов вперёд.</p>
+          <p>Это не «плохо работает бизнес». Это другой уровень проблемы.</p>
+          <div className="mt-8">
+            <p className="text-zinc-200 font-medium mb-4 uppercase text-xs tracking-widest opacity-60">Есть два состояния бизнеса:</p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800">
+                <p className="text-blue-400 font-bold mb-2 text-sm uppercase italic">1. Управление системой</p>
+                <p className="text-xs leading-relaxed">Есть понятный поток клиентов, оборотка и решения на несколько шагов вперёд.</p>
               </div>
-              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800 hover:border-blue-500/30 transition-colors text-left">
-                <p className="text-blue-400 font-bold mb-2 text-sm uppercase">2. Тушение пожаров</p>
-                <p className="text-xs">Нет запаса, всё завязано на тебе, решения принимаются из «надо срочно».</p>
+              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800">
+                <p className="text-blue-400 font-bold mb-2 text-sm uppercase italic">2. Тушение пожаров</p>
+                <p className="text-xs leading-relaxed">Нет запаса, всё завязано на тебе, решения принимаются из «надо срочно».</p>
               </div>
             </div>
           </div>
-          <p className="pt-6 font-medium text-zinc-200">Ты сейчас во втором состоянии.</p>
         </div>
       )
     },
@@ -47,27 +73,44 @@ const CONTENT = {
       id: 2,
       title: "Где ты сейчас на самом деле",
       content: (
-        <div className="space-y-6 text-zinc-400 leading-relaxed">
-          <p className="text-zinc-200">Любой бизнес проходит через три состояния:</p>
+        <div className="space-y-6 text-zinc-400">
+          <p className="text-zinc-200 font-medium">Любой бизнес (и человек) проходит через три состояния:</p>
           <div className="space-y-4">
-            <div className="bg-zinc-800/30 p-6 rounded-2xl border border-zinc-800">
-              <p className="font-bold text-zinc-100 mb-2 uppercase text-xs tracking-[0.2em]">1. Хаос</p>
-              <p className="text-sm">Постоянно что-то горит, решения из срочности, деньги рывками, всё на тебе. Много движений — мало результата.</p>
-              <div className="mt-4 pt-4 border-t border-zinc-800">
-                <p className="text-xs italic text-zinc-500">«Надо сейчас как-то выкрутиться», «Где взять деньги», «Надо дожать».</p>
+            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
+              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">1. Хаос</p>
+              <div className="space-y-3">
+                <p className="text-sm italic text-zinc-300">Как это выглядит:</p>
+                <ul className="list-disc pl-5 text-xs space-y-1">
+                  <li>постоянно что-то горит</li>
+                  <li>решения принимаются «надо срочно»</li>
+                  <li>деньги приходят рывками</li>
+                  <li>нет запаса</li>
+                  <li>всё держится на тебе</li>
+                  <li>много движений — мало результата</li>
+                </ul>
               </div>
             </div>
-            <div className="bg-zinc-800/30 p-6 rounded-2xl border border-zinc-800">
-              <p className="font-bold text-zinc-100 mb-2 uppercase text-xs tracking-[0.2em]">2. Стабилизация</p>
-              <p className="text-sm">Есть понятный поток клиентов, оборотка, структура. Решения не из срочности, а из расчёта. Здесь ещё нет масштабирования, это уровень «система держится».</p>
+            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
+              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">2. Стабилизация</p>
+              <div className="space-y-3">
+                <p className="text-sm italic text-zinc-300">Как это выглядит:</p>
+                <ul className="list-disc pl-5 text-xs space-y-1">
+                  <li>есть понятный поток клиентов</li>
+                  <li>есть оборотка</li>
+                  <li>есть структура</li>
+                  <li>решения не из срочности, а из расчёта</li>
+                  <li>ты не тушишь пожары каждый день</li>
+                </ul>
+                <p className="text-xs text-blue-400 font-medium mt-2 italic">здесь ещё нет масштабирования, это уровень «собрал систему, она держится»</p>
+              </div>
             </div>
-            <div className="bg-zinc-800/30 p-6 rounded-2xl border border-zinc-800">
-              <p className="font-bold text-zinc-100 mb-2 uppercase text-xs tracking-[0.2em]">3. Рост / Система</p>
-              <p className="text-sm">Бизнес работает не на тебе, есть управляемая модель, можно планировать вперёд. Масштаб — это следствие системы.</p>
+            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
+              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">3. Рост / Система</p>
+              <p className="text-xs leading-relaxed">Бизнес работает не на тебе, есть управляемая модель, можно планировать вперёд. Масштаб — это следствие системы.</p>
             </div>
           </div>
-          <div className="bg-blue-500/5 p-6 rounded-2xl border border-blue-500/10 mt-6">
-            <p className="text-zinc-200 font-medium italic">Ты как будто между уровнями застрял: голова уже в следующем, а действия — как в хаосе. Твоя старая модель больше не тянет твой уровень.</p>
+          <div className="p-6 bg-zinc-950 rounded-3xl border border-zinc-800 mt-6">
+            <p className="text-zinc-100 font-medium italic">Ты как будто между уровнями застрял: голова уже в следующем уровне, а бизнес — в предыдущем. Твоя старая модель больше не тянет твой уровень.</p>
           </div>
         </div>
       )
@@ -76,25 +119,24 @@ const CONTENT = {
       id: 3,
       title: "Почему это не решается действиями",
       content: (
-        <div className="space-y-4 text-zinc-400 leading-relaxed">
-          <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-3xl relative overflow-hidden text-left">
-             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 blur-3xl rounded-full"></div>
-             <p className="text-zinc-100 font-bold text-xl leading-tight relative z-10">Ключевая мысль: ты пытаешься решить системную проблему операционными действиями.</p>
+        <div className="space-y-6 text-zinc-400">
+          <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2.5rem] relative overflow-hidden">
+            <p className="text-zinc-100 font-black text-2xl leading-tight italic relative z-10">Ключевая мысль: ты пытаешься решить системную проблему операционными действиями.</p>
           </div>
-          <p className="pt-4">Если бы проблема была только в «не хватает клиентов», реклама бы всё решила. Но у тебя нет оборотки, устойчивого потока и структуры продаж.</p>
-          <div className="grid gap-4 mt-6">
-            <div className="p-6 bg-zinc-950 rounded-2xl border border-zinc-800 text-left">
-              <p className="text-zinc-100 font-medium mb-2">Сейчас бизнес это:</p>
-              <p className="text-red-400/80 uppercase text-[10px] tracking-widest font-bold mb-3">Набор действий</p>
-              <p className="text-xs opacity-70">Где-то купили, где-то продали, где-то договорились, где-то перекрыли.</p>
+          <p>Если бы проблема была: «не хватает клиентов» — то реклама бы это решила. Но у тебя нет оборотки, нет устойчивого потока и нет структуры продаж.</p>
+          <div className="grid gap-4 py-4">
+            <div className="p-6 bg-zinc-950 rounded-2xl border border-zinc-800">
+              <p className="text-zinc-400 uppercase text-[10px] tracking-widest font-black mb-2">Сейчас:</p>
+              <p className="text-zinc-100 font-medium text-lg leading-tight">Бизнес работает как набор действий (купили, продали, договорились, перекрыли).</p>
             </div>
-            <div className="p-6 bg-zinc-950 rounded-2xl border border-blue-500/20 text-left">
-              <p className="text-zinc-100 font-medium mb-2">Должен работать как:</p>
-              <p className="text-blue-400 uppercase text-[10px] tracking-widest font-bold mb-3">Система</p>
-              <p className="text-xs opacity-70">Где заранее понятно: откуда приходят клиенты, как доходят до сделки, как ты обеспечиваешь объём.</p>
+            <div className="p-6 bg-zinc-950 rounded-2xl border border-blue-500/20">
+              <p className="text-blue-400 uppercase text-[10px] tracking-widest font-black mb-2">Должен работать как:</p>
+              <p className="text-zinc-100 font-medium text-lg leading-tight italic">Система, где заранее понятно, откуда приходят клиенты и как они доходят до сделки.</p>
             </div>
           </div>
-          <p className="pt-4 italic text-center text-zinc-300">Пока нет архитектуры — любые действия только усиливают хаос.</p>
+          <div className="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 text-center">
+            <p className="italic text-zinc-200 leading-relaxed">Пока нет архитектуры — любые действия только усиливают хаос.</p>
+          </div>
         </div>
       )
     },
@@ -102,23 +144,23 @@ const CONTENT = {
       id: 4,
       title: "Есть точка, где это можно собрать",
       content: (
-        <div className="space-y-6 text-zinc-400 leading-relaxed">
-          <p>Твой бизнес сейчас в старой логике, которая больше не даёт результата. Это не решается кусками — маркетингом или людьми отдельно. Это собирается только целиком.</p>
-          <div className="space-y-3 pt-2">
+        <div className="space-y-6 text-zinc-400">
+          <p>Твой бизнес сейчас в старой логике, которая больше не даёт результата. Это собирается только целиком.</p>
+          <div className="space-y-3">
             {[
-              "Определяем модель бизнеса на самом деле (не «пиломатериалы», а модель)",
-              "Находим, где теряются деньги и где ты держишь всё на себе",
-              "Собираем новую модель продаж и структуру",
+              "Определяем, что у тебя за бизнес на самом деле (не «пиломатериалы», а модель)",
+              "Находим, где он сейчас ломается (где теряются деньги, где нет связки)",
+              "Собираем новую модель (как приходят деньги, логика продаж, структура)",
               "Фиксируем архитектуру для управления"
-            ].map((step, i) => (
-              <div key={i} className="flex items-center gap-4 p-4 bg-zinc-900/40 rounded-2xl border border-zinc-800/50 text-left">
-                <span className="text-blue-500 font-bold font-mono shrink-0">0{i+1}</span>
-                <p className="text-sm text-zinc-300">{step}</p>
+            ].map((text, i) => (
+              <div key={i} className="flex gap-4 p-5 bg-zinc-900/40 rounded-2xl border border-zinc-800/60 items-center">
+                <span className="font-black text-blue-500 text-lg">0{i + 1}</span>
+                <p className="text-sm text-zinc-300 leading-snug">{text}</p>
               </div>
             ))}
           </div>
-          <div className="p-6 bg-blue-600/10 rounded-2xl border border-blue-500/20 text-center">
-             <p className="text-zinc-100 font-medium">Я не помогаю делать больше действий, я собираю систему, в которой бизнес начинает работать по-другому.</p>
+          <div className="p-8 bg-blue-600/10 rounded-[2rem] border border-blue-500/30 text-center shadow-lg">
+            <p className="text-zinc-100 font-black italic uppercase tracking-tighter text-xl">Либо ты один раз собираешь систему и дальше уже растёшь из неё.</p>
           </div>
         </div>
       )
@@ -127,250 +169,184 @@ const CONTENT = {
       id: 5,
       title: "Честные рекомендации",
       content: (
-        <div className="space-y-8 text-zinc-400 leading-relaxed">
-          <div className="space-y-3">
-            <p className="text-zinc-100 font-bold uppercase text-[10px] tracking-widest bg-zinc-800 px-3 py-1 rounded inline-block">1. Фокус</p>
-            <p className="text-sm">Выбери одно направление, которое быстрее всего превращается в деньги. Судя по ситуации — это сухой строганный пиломатериал (наличие и скорость). Аудитория: бригады, мелкие застройщики, частники.</p>
+        <div className="space-y-8 text-zinc-400">
+          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
+            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">1. Фокус</p>
+            <p className="text-sm leading-relaxed">Выбери одно направление, которое быстрее всего превращается в деньги. Судя по твоей ситуации — это сухой строганный пиломатериал (наличие + скорость).</p>
           </div>
-          <div className="space-y-3">
-            <p className="text-zinc-100 font-bold uppercase text-[10px] tracking-widest bg-zinc-800 px-3 py-1 rounded inline-block">2. Деньги</p>
-            <p className="text-sm">Переверни модель: продавай под заказ с предоплатой или делай ограниченные партии под конкретный спрос. Сейчас важна не прибыль с куба, а скорость возврата денег в оборот.</p>
+          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
+            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">2. Деньги</p>
+            <p className="text-sm leading-relaxed">Переверни модель: продавай под заказ с предоплатой. Тебе сейчас важна не прибыль с куба, а чтобы деньги возвращались в оборот быстрее.</p>
           </div>
-          <div className="space-y-3">
-            <p className="text-zinc-100 font-bold uppercase text-[10px] tracking-widest bg-zinc-800 px-3 py-1 rounded inline-block">3. Продажи</p>
-            <p className="text-sm">Лид пришёл — сразу наличие, цена и дожим через звонок. Тебе нужно не строить отдел, а просто зафиксировать этот процесс. Напиши ответы на 5 частых вопросов и скрипт.</p>
+          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
+            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">3. Продажи</p>
+            <p className="text-sm leading-relaxed">Зафиксируй простую модель: Лид пришёл — наличие / сроки — цена — дожим через звонок — предоплата — запуск.</p>
           </div>
-          <div className="space-y-3">
-            <p className="text-zinc-100 font-bold uppercase text-[10px] tracking-widest bg-zinc-800 px-3 py-1 rounded inline-block">4. Люди и ИИ</p>
-            <p className="text-sm">Возьми 1–2 человека на простые задачи (объявления, ответы). Дай им ChatGPT для генерации контента и ответов клиентам. Люди не должны думать — у них должны быть задачи и инструменты.</p>
+          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
+            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">4. Люди и ИИ</p>
+            <p className="text-sm leading-relaxed">Возьми 1–2 человека на простые задачи (Авито, ответы). Дай им ChatGPT и конкретные задачи. Люди не должны думать — у них должны быть инструменты.</p>
           </div>
-          <div className="pt-4 border-t border-zinc-800 text-center">
-            <p className="text-zinc-500 italic text-xs uppercase tracking-widest">Твоя задача сейчас — собрать устойчивую основу.</p>
+          <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 mt-6 text-center">
+            <p className="text-zinc-400 text-xs italic uppercase tracking-widest">Твоя задача сейчас — собрать устойчивую основу.</p>
           </div>
         </div>
       )
     }
-  ],
-  block6: {
-    title: "Платный пакет",
-    introContent: (
-      <div className="space-y-6 text-zinc-400">
-        <p className="text-lg leading-relaxed">За 3–4 часа навигационной сессии я покажу, где твои реальные деньги, где потери, и соберу готовую модель бизнеса именно под твою ситуацию.</p>
-        <div className="grid gap-6 md:grid-cols-2">
-          <div className="p-6 bg-zinc-900/40 rounded-3xl border border-zinc-800 text-left">
-            <p className="text-zinc-100 font-medium mb-1">Формат</p>
-            <p className="text-xs opacity-60">Структурированный документ, по которому можно действовать сразу.</p>
-          </div>
-          <div className="p-6 bg-zinc-900/40 rounded-3xl border border-zinc-800 text-left">
-            <p className="text-zinc-100 font-medium mb-1">Результат</p>
-            <p className="text-xs opacity-60">Понятное направление без метаний между вариантами.</p>
-          </div>
-        </div>
-      </div>
-    ),
-    lockedSubtitle: "Полная сборка под тебя — доступ после оплаты",
-    lockedList: [
-      "Понимание, на чём зарабатывать сейчас",
-      "Готовое предложение под рынок",
-      "Разбор рынка (Марий Эл / Татарстан / Чувашия)",
-      "Разбор конкурентов и их слабых мест",
-      "Чёткое решение по земле и инвестору",
-      "Схема внедрения ИИ в твои продажи"
-    ],
-    price: "50 000 руб.",
-    buttonText: "Получить доступ"
-  },
-  paymentModal: {
-    instruction: "Я работаю как самозанятая. Оплата производится переводом на карту Т-Банка:",
-    requisites: "2200 7021 1957 4882\nВединеева Ирина Михайловна",
-    details: [
-      "После оплаты отправляю чек и договор",
-      "Согласовываем дату навигационной сессии",
-      "Через 2 дня вы получаете готовое решение в PDF"
-    ]
-  }
-};
-
-export default function App() {
-  const [openBlocks, setOpenBlocks] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
-
-  const toggleBlock = (id) => {
-    setOpenBlocks(prev => {
-      const newState = { ...prev };
-      newState[id] = !prev[id];
-      return newState;
-    });
-  };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowScrollTop(window.scrollY > 400);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const AccordionBlock = ({ id, index, title, children }) => {
-    const isOpen = openBlocks[id];
-    const displayNum = String(index).padStart(2, '0');
-    
-    return (
-      <div className="bg-[#18181B] border border-zinc-800/80 rounded-3xl overflow-hidden mb-4 transition-all duration-300 shadow-xl">
-        <button
-          onClick={() => toggleBlock(id)}
-          className="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer hover:bg-[#1C1C21] transition-colors"
-        >
-          <div className="flex items-center gap-5">
-            <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[#27272A] text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50 group-hover:border-blue-500/30 transition-colors">
-              {displayNum}
-            </div>
-            <h2 className="text-xl md:text-2xl font-semibold text-zinc-100 tracking-tight">
-              {title}
-            </h2>
-          </div>
-          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#27272A] shrink-0">
-            <ChevronDown 
-              className={`w-5 h-5 text-zinc-400 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} 
-            />
-          </div>
-        </button>
-        <div 
-          className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
-        >
-          <div className="overflow-hidden">
-            <div className="px-6 md:px-8 pb-8 pt-2 border-t border-zinc-800/50">
-              {children}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
+  ];
 
   return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans selection:bg-blue-500/30">
-      
-      {/* Декоративная линия рентгена */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent blur-sm z-50 pointer-events-none animate-pulse"></div>
+    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans selection:bg-blue-600/30">
+      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent blur-sm z-50 pointer-events-none"></div>
 
-      <header className="max-w-4xl mx-auto px-6 pt-24 md:pt-32 pb-16 relative">
+      <header className="max-w-4xl mx-auto px-6 pt-24 pb-16 relative">
         <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 blur-[120px] pointer-events-none rounded-full"></div>
         <div className="space-y-8 relative z-10 text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
             Диагностика системы
           </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tighter text-white italic">
-            {CONTENT.hero.title}
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tighter text-white italic uppercase">
+            Рентген бизнеса
           </h1>
-          <p className="text-xl md:text-2xl text-zinc-400 leading-relaxed max-w-2xl font-light">
-            {CONTENT.hero.subtitle}
-          </p>
+          <div className="text-xl md:text-2xl text-zinc-400 leading-relaxed max-w-2xl font-light">
+            <p>Ты не видишь, где у тебя проблема, пока смотришь на бизнес «снаружи».</p>
+            <p className="mt-4 text-zinc-100 font-medium">Я показываю, что происходит на самом деле, и собираю решение под тебя.</p>
+          </div>
           <div className="pt-8">
             <button 
-              onClick={() => {
-                const section = document.getElementById('blocks-section');
-                if (section) section.scrollIntoView({ behavior: 'smooth' });
-              }}
-              className="group inline-flex items-center justify-center gap-4 bg-white text-zinc-950 px-10 py-5 text-xl font-black uppercase tracking-tighter rounded-2xl hover:bg-blue-50 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.1)] active:scale-95 cursor-pointer"
+              onClick={() => document.getElementById('01').scrollIntoView({ behavior: 'smooth' })}
+              className="group inline-flex items-center justify-center gap-4 bg-white text-zinc-950 px-10 py-5 text-xl font-black uppercase tracking-tighter rounded-2xl hover:bg-blue-50 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.05)] active:scale-95 cursor-pointer"
             >
-              {CONTENT.hero.buttonText}
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+              Разобрать ситуацию
+              <IconArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
             </button>
           </div>
         </div>
       </header>
 
-      <main id="blocks-section" className="max-w-4xl mx-auto px-6 pb-32">
-        
-        {CONTENT.blocks.map((block, idx) => (
-          <AccordionBlock key={block.id} id={block.id} index={idx + 1} title={block.title}>
-            {block.content}
-          </AccordionBlock>
-        ))}
-
-        <AccordionBlock id={6} index={6} title={CONTENT.block6.title}>
-          <div className="mb-10 text-left">
-            {CONTENT.block6.introContent}
-          </div>
-
-          <div className="relative mt-8 w-full overflow-hidden rounded-[3rem] border border-[#27272A] bg-[#131315] shadow-2xl">
-            
-            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{backgroundImage: 'radial-gradient(#ffffff 1px, transparent 0)', backgroundSize: '40px 40px'}}></div>
-
-            <div className="relative z-10 p-8 md:p-14 bg-[#18181B]/60 backdrop-blur-2xl flex flex-col items-center text-center">
-              
-              <div className="w-20 h-20 bg-[#27272A] rounded-[2rem] flex items-center justify-center mb-8 shadow-xl border border-zinc-700/50">
-                <Lock className="w-8 h-8 text-blue-400" />
-              </div>
-              
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-10 max-w-md uppercase tracking-tighter italic leading-snug">
-                {CONTENT.block6.lockedSubtitle}
-              </h3>
-
-              <div className="w-full max-w-lg text-left space-y-5 mb-12 bg-zinc-950/50 p-8 rounded-[2rem] border border-zinc-800 shadow-inner">
-                {CONTENT.block6.lockedList.map((item, index) => (
-                  <div key={index} className="flex items-start gap-4 transition-transform hover:translate-x-1">
-                    <ShieldCheck className="w-5 h-5 text-blue-500 shrink-0 mt-1 shadow-blue-500/20" />
-                    <span className="text-zinc-300 text-sm md:text-lg leading-snug">{item}</span>
+      <main className="max-w-4xl mx-auto px-6 pb-32">
+        {blocks.map((block, idx) => {
+          const num = String(idx + 1).padStart(2, '0');
+          const isOpen = openBlocks[block.id];
+          return (
+            <div key={block.id} id={num} className="bg-[#18181B] border border-zinc-800/80 rounded-[2.5rem] overflow-hidden mb-6 transition-all duration-300 shadow-xl">
+              <button
+                onClick={() => toggleBlock(block.id)}
+                className="w-full flex justify-between items-center p-6 md:p-10 text-left group cursor-pointer hover:bg-[#1C1C21] transition-colors"
+              >
+                <div className="flex items-center gap-6">
+                  <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-[1.5rem] bg-[#27272A] text-blue-400 font-black text-xl shrink-0 border border-zinc-700/50 group-hover:border-blue-500/30 transition-colors">
+                    {num}
                   </div>
-                ))}
-              </div>
-
-              <div className="w-full max-w-lg pt-8 border-t border-zinc-800">
-                <div className="text-[10px] text-zinc-500 mb-2 uppercase tracking-[0.5em] font-black italic">Инвестиция</div>
-                <div className="text-5xl md:text-7xl font-black text-white mb-12 tracking-tighter italic">
-                  {CONTENT.block6.price}
+                  <h2 className="text-xl md:text-3xl font-black text-zinc-100 tracking-tighter uppercase italic">
+                    {block.title}
+                  </h2>
                 </div>
-                
-                <button 
-                  onClick={() => setShowModal(true)}
-                  className="w-full group inline-flex items-center justify-center gap-3 bg-white text-zinc-950 px-10 py-6 text-2xl font-black uppercase tracking-widest rounded-[2rem] hover:bg-blue-50 transition-all shadow-[0_20px_40px_rgba(255,255,255,0.05)] active:scale-95 cursor-pointer"
-                >
-                  {CONTENT.block6.buttonText}
-                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                </button>
+                <IconChevron 
+                  className={`w-6 h-6 text-zinc-500 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} 
+                />
+              </button>
+              <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
+                <div className="overflow-hidden">
+                  <div className="px-6 md:px-10 pb-10 pt-2 border-t border-zinc-800/50">
+                    {block.content}
+                  </div>
+                </div>
               </div>
+            </div>
+          );
+        })}
 
+        {/* Сборка Платный пакет */}
+        <div className="bg-[#18181B] border border-blue-500/20 rounded-[3rem] overflow-hidden mt-12 shadow-2xl relative">
+          <div className="p-8 md:p-14 text-left">
+            <h2 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-8">Платный пакет</h2>
+            <div className="space-y-8 text-zinc-400">
+              <p className="text-xl leading-relaxed text-zinc-200">За 3–4 часа навигационной сессии я покажу, где твои деньги, где потери, и соберу понятную модель, как тебе дальше работать.</p>
+              <div className="grid gap-6 sm:grid-cols-2">
+                <div className="p-6 bg-zinc-900/60 rounded-3xl border border-zinc-800">
+                  <p className="text-zinc-100 font-black uppercase text-[10px] tracking-widest mb-2 italic">Формат</p>
+                  <p className="text-sm leading-relaxed">Ты получаешь это в виде структурированного документа, к которому можно возвращаться.</p>
+                </div>
+                <div className="p-6 bg-zinc-900/60 rounded-3xl border border-zinc-800">
+                  <p className="text-zinc-100 font-black uppercase text-[10px] tracking-widest mb-2 italic">Результат</p>
+                  <p className="text-sm leading-relaxed">У тебя появляется понятное направление, ты перестаёшь метаться между вариантами.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-12 relative overflow-hidden rounded-[2.5rem] border border-zinc-800 bg-[#131315]">
+              <div className="p-8 md:p-14 bg-[#18181B]/60 backdrop-blur-2xl flex flex-col items-center text-center">
+                <div className="w-20 h-20 bg-[#27272A] rounded-[2rem] flex items-center justify-center mb-8 shadow-xl border border-zinc-700/50">
+                  <IconLock className="w-10 h-10 text-blue-400" />
+                </div>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-10 max-w-md uppercase tracking-tighter italic leading-snug">
+                  Полная сборка под тебя — доступ после оплаты
+                </h3>
+                <div className="w-full max-w-lg text-left space-y-4 mb-12 bg-zinc-950/50 p-8 rounded-[2rem] border border-zinc-800 shadow-inner">
+                  {[
+                    "Понимание, на чём тебе зарабатывать сейчас",
+                    "Готовое предложение под рынок",
+                    "Разбор рынка (Марий Эл / Татарстан / Чувашия)",
+                    "Разбор конкурентов и слабых мест",
+                    "Чёткое решение по земле и инвестору",
+                    "Где и как внедрить ИИ в твою работу"
+                  ].map((text, i) => (
+                    <div key={i} className="flex items-start gap-4">
+                      <IconShield className="w-5 h-5 text-blue-500 shrink-0 mt-1" />
+                      <span className="text-zinc-300 text-sm md:text-lg leading-snug font-medium italic">{text}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="w-full max-w-lg pt-8 border-t border-zinc-800">
+                  <div className="text-[10px] text-zinc-500 mb-2 uppercase tracking-[0.5em] font-black italic">Инвестиция</div>
+                  <div className="text-5xl md:text-7xl font-black text-white mb-12 tracking-tighter italic">50 000 руб.</div>
+                  <button 
+                    onClick={() => { setShowModal(true); document.body.style.overflow = 'hidden'; }}
+                    className="w-full group inline-flex items-center justify-center gap-3 bg-white text-zinc-950 px-10 py-6 text-2xl font-black uppercase tracking-widest rounded-[2rem] hover:bg-blue-50 transition-all shadow-[0_20px_40px_rgba(255,255,255,0.05)] active:scale-95 cursor-pointer"
+                  >
+                    Получить доступ
+                    <IconArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-        </AccordionBlock>
-
+        </div>
       </main>
 
       {showModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#09090B]/95 backdrop-blur-xl transition-all duration-300">
-          <div className="bg-[#18181B] border border-[#27272A] max-w-lg w-full rounded-[3rem] shadow-[0_0_100px_rgba(59,130,246,0.1)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-300 max-h-[90vh] flex flex-col">
-            
+          <div className="bg-[#18181B] border border-[#27272A] max-w-lg w-full rounded-[3rem] shadow-[0_0_100px_rgba(59,130,246,0.1)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
             <button 
-              onClick={() => setShowModal(false)}
+              onClick={() => { setShowModal(false); document.body.style.overflow = 'auto'; }}
               className="absolute top-8 right-8 p-3 text-zinc-500 hover:text-white transition-colors bg-[#27272A]/50 rounded-full cursor-pointer z-50 shadow-lg"
             >
-              <X className="w-6 h-6" />
+              <IconX className="w-6 h-6" />
             </button>
-            
             <div className="p-10 md:p-14 overflow-y-auto">
               <h3 className="text-3xl font-black text-white mb-10 uppercase tracking-tighter italic text-center">Оформление доступа</h3>
-              
-              <div className="bg-[#27272A]/30 border border-[#27272A] p-8 rounded-[2rem] mb-10 shadow-inner group text-center">
-                <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-4 font-bold italic">{CONTENT.paymentModal.instruction}</p>
+              <div className="bg-[#27272A]/30 border border-[#27272A] p-8 rounded-[2.5rem] mb-10 shadow-inner text-center">
+                <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-4 font-bold italic">Оплата переводом на карту Т-Банка:</p>
                 <p className="text-xl md:text-3xl font-mono font-bold text-white tracking-widest whitespace-pre-wrap leading-relaxed">
-                  {CONTENT.paymentModal.requisites}
+                  2200 7021 1957 4882
                 </p>
+                <p className="text-zinc-500 text-[10px] mt-4 font-black uppercase tracking-widest opacity-60">Вединеева Ирина Михайловна</p>
               </div>
-
               <div className="space-y-6">
-                {CONTENT.paymentModal.details.map((detail, idx) => (
-                  <div key={idx} className="flex items-center gap-4 text-zinc-300 text-sm md:text-lg text-left">
+                {[
+                  "Я работаю как самозанятая",
+                  "После оплаты отправляю чек и договор",
+                  "Согласовываем дату сессии",
+                  "Через 2 дня вы получаете готовое решение"
+                ].map((text, idx) => (
+                  <div key={idx} className="flex items-center gap-4 text-zinc-300 text-sm md:text-lg">
                     <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                    <span className="font-medium leading-snug">{detail}</span>
+                    <span className="font-medium leading-snug italic">{text}</span>
                   </div>
                 ))}
               </div>
-
-              <div className="mt-12 pt-10 border-t border-zinc-800 text-center text-zinc-500 text-[10px] uppercase tracking-[0.4em] font-black italic leading-relaxed">
-                Чек об оплате пришлите <br/> в ответном сообщении.
+              <div className="mt-12 pt-10 border-t border-zinc-800 text-center">
+                <p className="text-zinc-600 text-[10px] uppercase tracking-[0.4em] font-black italic leading-relaxed">Чек об оплате пришлите в ответном сообщении.</p>
               </div>
             </div>
           </div>
@@ -379,14 +355,12 @@ export default function App() {
 
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 p-4 bg-[#27272A] text-white rounded-full shadow-2xl hover:bg-[#3F3F46] transition-all duration-500 z-40 border border-zinc-700/50 cursor-pointer ${
+        className={`fixed bottom-8 right-8 p-5 bg-[#27272A] text-white rounded-full shadow-2xl hover:bg-[#3F3F46] transition-all duration-500 z-40 border border-zinc-700/50 cursor-pointer ${
           showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
         }`}
-        aria-label="Наверх"
       >
-        <ArrowUp className="w-6 h-6" />
+        <IconArrowUp className="w-6 h-6" />
       </button>
-
     </div>
   );
 }
