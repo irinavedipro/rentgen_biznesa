@@ -1,1114 +1,397 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рентген бизнеса</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes scan {
-            0% { transform: translateY(-100vh); opacity: 0; }
-            50% { opacity: 0.5; }
-            100% { transform: translateY(100vh); opacity: 0; }
-        }
+import React, { useState, useEffect } from 'react';
+
+const IconChevronDown = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>);
+const IconLock = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>);
+const IconArrowUp = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>);
+const IconArrowRight = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>);
+const IconShieldCheck = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2-1 4-2 7-2 2.5 0 4.5 1 7 2a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>);
+const IconX = ({ className }) => (<svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>);
+
+const CONTENT = {
+  hero: {
+    title: "Рентген бизнеса",
+    subtitle: "Ты не видишь, где у тебя проблема, пока смотришь на бизнес «снаружи». Я показываю, что происходит на самом деле, и собираю решение под тебя.",
+    buttonText: "Разобрать мою ситуацию",
+    buttonLink: "https://wa.me/79877299259" 
+  },
+  blocks: [
+    {
+      id: 1,
+      title: "Точка А",
+      content: (
+        <div className="space-y-4 text-zinc-400">
+          <p className="font-medium text-lg text-zinc-200">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
+          <p>Ты сейчас не в кризисе. Ты сейчас в системе, которая работает вот так: ты постоянно закрываешь дыры.</p>
+          <ul className="list-disc pl-5 space-y-2">
+            <li>деньги приходят не из системы, а из напряжения</li>
+            <li>ты держишь всё на себе</li>
+            <li>у тебя есть люди, оборудование, ресурсы, но они не складываются в управляемую модель</li>
+          </ul>
+          <div className="pt-2 bg-zinc-800/40 p-5 rounded-2xl border-l-2 border-zinc-500 mt-6">
+            <p className="font-medium text-zinc-200 mb-2">И самое важное:</p>
+            <p>ты каждый день действуешь, но это не даёт тебе выхода.</p>
+          </div>
+          <p className="pt-4">Это не «плохо работает бизнес». Это другой уровень проблемы.</p>
+          <div className="space-y-4 mt-6">
+            <p className="font-medium text-zinc-200">Есть два состояния бизнеса:</p>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="p-4 bg-zinc-900/50 rounded-xl border border-zinc-800">
+                <p className="text-zinc-200 font-medium mb-2 text-sm uppercase">1. Управление системой</p>
+                <p className="text-xs">Есть понятный поток клиентов, оборотка и решения на несколько шагов вперёд.</p>
+              </div>
+              <div className="p-4 bg-zinc-900/50 rounded-xl border border-zinc-800">
+                <p className="text-zinc-200 font-medium mb-2 text-sm uppercase">2. Тушение пожаров</p>
+                <p className="text-xs">Нет запаса, всё завязано на тебе, решения принимаются из «надо срочно».</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    {
+      id: 2,
+      title: "Где ты сейчас на самом деле",
+      content: (
+        <div className="space-y-6 text-zinc-400">
+          <p>Любой бизнес проходит через три состояния:</p>
+          <div className="space-y-4">
+            <div className="bg-zinc-800/20 p-5 rounded-2xl border border-zinc-800/50">
+              <p className="font-medium text-zinc-200 mb-2 uppercase text-sm tracking-widest">1. Хаос</p>
+              <p className="text-sm">Постоянно что-то горит, решения из срочности, деньги рывками, всё на тебе.</p>
+              <p className="text-xs mt-2 italic text-zinc-500">«Надо сейчас как-то выкрутиться», «Где взять деньги».</p>
+            </div>
+            <div className="bg-zinc-800/20 p-5 rounded-2xl border border-zinc-800/50">
+              <p className="font-medium text-zinc-200 mb-2 uppercase text-sm tracking-widest">2. Стабилизация</p>
+              <p className="text-sm">Понятный поток, структура, решения из расчёта. Здесь ещё нет масштабирования, это уровень «система держится».</p>
+            </div>
+            <div className="bg-zinc-800/20 p-5 rounded-2xl border border-zinc-800/50">
+              <p className="font-medium text-zinc-200 mb-2 uppercase text-sm tracking-widest">3. Рост / Система</p>
+              <p className="text-sm">Бизнес работает не на тебе, есть управляемая модель, планирование вперёд.</p>
+            </div>
+          </div>
+          <p className="pt-2 text-zinc-200 font-medium italic">Ты как будто между уровнями застрял: голова в следующем, а действия как в хаосе.</p>
+          <p>Проблема не в клиентах или рекламе, а в отсутствии уровня системы, которая может это удержать.</p>
+        </div>
+      )
+    },
+    {
+      id: 3,
+      title: "Почему это не решается действиями",
+      content: (
+        <div className="space-y-4 text-zinc-400">
+          <p className="text-zinc-200 font-medium text-lg leading-tight">Ключевая мысль: ты пытаешься решить системную проблему операционными действиями.</p>
+          <p>Если бы не хватало только клиентов, реклама бы помогла. Но без оборотки, устойчивого потока и структуры продаж ситуация не стабилизируется.</p>
+          <div className="bg-zinc-900 p-5 rounded-2xl border border-zinc-800 mt-4">
+            <p className="text-zinc-200 italic">Сейчас бизнес — это набор действий (купили, продали, договорились, перекрыли). Должен стать системой, где заранее понятно, откуда приходят деньги и как они возвращаются в оборот.</p>
+          </div>
+          <p className="pt-4 text-zinc-300 font-medium uppercase text-xs tracking-widest">Два типа работы:</p>
+          <ol className="list-decimal pl-5 space-y-2">
+            <li><span className="text-zinc-200 font-medium">Операционный уровень</span> (найм, продажи, процессы) — это ты уже пробовал.</li>
+            <li><span className="text-zinc-200 font-medium">Уровень архитектуры</span> (логика денег, модель продаж, последовательность действий).</li>
+          </ol>
+          <p className="mt-4 font-medium text-white italic">Пока нет архитектуры — любые действия только усиливают хаос.</p>
+        </div>
+      )
+    },
+    {
+      id: 4,
+      title: "Есть точка, где это можно собрать",
+      content: (
+        <div className="space-y-4 text-zinc-400">
+          <p>Твой бизнес сейчас в старой логике, которая больше не даёт результата. Это не решается кусками — маркетингом или людьми отдельно.</p>
+          <div className="grid gap-3 pt-4">
+            <div className="p-4 bg-zinc-900/40 rounded-xl border border-zinc-800 flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center shrink-0 text-zinc-500 font-bold">1</div>
+              <p className="text-sm">Определяем модель бизнеса на самом деле.</p>
+            </div>
+            <div className="p-4 bg-zinc-900/40 rounded-xl border border-zinc-800 flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center shrink-0 text-zinc-500 font-bold">2</div>
+              <p className="text-sm">Находим, где теряются деньги и где ты держишь всё сам.</p>
+            </div>
+            <div className="p-4 bg-zinc-900/40 rounded-xl border border-zinc-800 flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center shrink-0 text-zinc-500 font-bold">3</div>
+              <p className="text-sm">Собираем новую модель продаж и структуры.</p>
+            </div>
+            <div className="p-4 bg-zinc-900/40 rounded-xl border border-zinc-800 flex items-center gap-4">
+              <div className="w-8 h-8 rounded bg-zinc-800 flex items-center justify-center shrink-0 text-zinc-500 font-bold">4</div>
+              <p className="text-sm">Фиксируем архитектуру для управления, а не разгребания.</p>
+            </div>
+          </div>
+          <p className="pt-4 text-zinc-200 font-medium">Я не помогаю делать больше действий, я собираю систему, в которой бизнес работает по-другому.</p>
+        </div>
+      )
+    },
+    {
+      id: 5,
+      title: "Честные рекомендации",
+      content: (
+        <div className="space-y-6 text-zinc-400">
+          <div className="space-y-4">
+            <p className="text-zinc-200 font-bold uppercase text-xs tracking-widest border-b border-zinc-800 pb-2">1. Фокус</p>
+            <p>Выбери одно направление, которое быстрее всего превращается в деньги. Судя по ситуации — это сухой строганный пиломатериал (наличие и скорость). Аудитория: бригады, мелкие застройщики.</p>
+          </div>
+          <div className="space-y-4">
+            <p className="text-zinc-200 font-bold uppercase text-xs tracking-widest border-b border-zinc-800 pb-2">2. Деньги</p>
+            <p>Переверни модель: продавай под заказ с предоплатой или делай ограниченные партии под конкретный спрос. Сейчас важна не прибыль с куба, а скорость оборота денег.</p>
+          </div>
+          <div className="space-y-4">
+            <p className="text-zinc-200 font-bold uppercase text-xs tracking-widest border-b border-zinc-800 pb-2">3. Продажи</p>
+            <p>Лид пришёл — сразу наличие, цена и дожим через звонок. Тебе нужно не строить отдел, а зафиксировать этот простой процесс.</p>
+          </div>
+          <div className="space-y-4">
+            <p className="text-zinc-200 font-bold uppercase text-xs tracking-widest border-b border-zinc-800 pb-2">4. Люди и ИИ</p>
+            <p>Возьми 1–2 человека на простые задачи (Авито, ответы). Дай им ChatGPT для генерации объявлений и ответов. Люди не должны думать — у них должны быть инструменты.</p>
+          </div>
+          <div className="bg-zinc-900/50 p-5 rounded-2xl border border-zinc-800 mt-6 text-center italic text-sm">
+            Твоя задача сейчас не вырасти, а собрать устойчивую основу.
+          </div>
+        </div>
+      )
+    }
+  ],
+  block6: {
+    title: "Платный пакет",
+    introContent: (
+      <div className="space-y-6 text-zinc-400">
+        <p className="text-lg leading-snug">За 3–4 часа навигационной сессии я покажу, где деньги, где потери, и соберу готовую модель бизнеса под тебя.</p>
+        <div className="grid gap-6 md:grid-cols-2">
+          <div className="space-y-2">
+            <p className="text-zinc-200 font-medium">Формат</p>
+            <p className="text-sm italic">Структурированный документ, по которому можно действовать сразу.</p>
+          </div>
+          <div className="space-y-2">
+            <p className="text-zinc-200 font-medium">Результат</p>
+            <p className="text-sm italic">Понятное направление без метаний между вариантами.</p>
+          </div>
+        </div>
+      </div>
+    ),
+    lockedSubtitle: "Полная сборка под тебя — доступ после оплаты",
+    lockedList: [
+      "Понимание, на чём зарабатывать сейчас",
+      "Готовое предложение под рынок",
+      "Разбор рынка (Марий Эл / Татарстан / Чувашия)",
+      "Разбор конкурентов и слабых мест",
+      "Понимание по земле и инвестору",
+      "Внедрение ИИ в продажи и процессы"
+    ],
+    price: "50 000 руб.",
+    buttonText: "Получить доступ"
+  },
+  paymentModal: {
+    instruction: "Оплата производится переводом на карту:",
+    requisites: "2200 7021 1957 4882\nТ-Банк\nВединеева Ирина Михайловна",
+    details: [
+      "Я самозанятая",
+      "После оплаты отправляю чек и договор",
+      "Согласовываем дату сессии",
+      "Через 2 дня вы получаете готовое решение"
+    ]
+  }
+};
+
+export default function App() {
+  const [openBlocks, setOpenBlocks] = useState({});
+  const [showModal, setShowModal] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  const toggleBlock = (id) => {
+    setOpenBlocks(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const AccordionBlock = ({ id, index, title, children }) => {
+    const isOpen = openBlocks[id];
+    const displayNum = String(index).padStart(2, '0');
+    
+    return (
+      <div className="bg-[#18181B] border border-zinc-800/80 rounded-3xl overflow-hidden mb-4 transition-all duration-300 shadow-sm">
+        <button
+          onClick={() => toggleBlock(id)}
+          className="w-full flex justify-between items-center p-5 md:p-6 text-left group cursor-pointer hover:bg-[#202024] transition-colors"
+        >
+          <div className="flex items-center gap-4 md:gap-5">
+            <div className="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-[#27272A] text-zinc-400 font-medium text-lg shrink-0">
+              {displayNum}
+            </div>
+            <h2 className="text-xl md:text-2xl font-medium text-zinc-100 pr-4">
+              {title}
+            </h2>
+          </div>
+          <div className="flex items-center justify-center w-10 h-10 rounded-full bg-[#27272A]/50 shrink-0">
+            <IconChevronDown 
+              className={`w-5 h-5 text-zinc-400 transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-180' : ''}`} 
+            />
+          </div>
+        </button>
+        <div 
+          className={`grid transition-all duration-300 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}
+        >
+          <div className="overflow-hidden">
+            <div className="px-5 md:px-6 pb-6 pt-2">
+              {children}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans selection:bg-zinc-700">
+      
+      <header className="max-w-3xl mx-auto px-4 md:px-6 pt-20 md:pt-32 pb-12 md:pb-20 relative">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/5 blur-[100px] pointer-events-none rounded-full"></div>
+        <div className="space-y-6 md:space-y-8 relative z-10">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-semibold leading-tight tracking-tighter text-white">
+            {CONTENT.hero.title}
+          </h1>
+          <p className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl font-light">
+            {CONTENT.hero.subtitle}
+          </p>
+          <div className="pt-6">
+            <a 
+              href={CONTENT.hero.buttonLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center justify-center gap-3 bg-white text-zinc-950 px-8 py-4 text-lg font-bold rounded-2xl hover:bg-zinc-200 transition-colors w-full md:w-auto shadow-xl"
+            >
+              {CONTENT.hero.buttonText}
+              <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <main id="blocks-section" className="max-w-3xl mx-auto px-4 md:px-6 pb-24">
         
-        .scan-line {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(to right, transparent, #3b82f6, transparent);
-            box-shadow: 0 0 15px 2px #3b82f6;
-            z-index: 50;
-            pointer-events: none;
-            animation: scan 8s linear infinite;
-        }
+        {CONTENT.blocks.map((block, idx) => (
+          <AccordionBlock key={block.id} id={block.id} index={idx + 1} title={block.title}>
+            {block.content}
+          </AccordionBlock>
+        ))}
 
-        .hero-image-overlay {
-            background: radial-gradient(circle at center, transparent 20%, #09090B 100%);
-        }
+        <AccordionBlock id={6} index={6} title={CONTENT.block6.title}>
+          <div className="mb-8">
+            {CONTENT.block6.introContent}
+          </div>
 
-        .glass-card {
-            background: rgba(24, 24, 27, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(63, 63, 70, 0.4);
-        }
-
-        .node-accent { border-left: 2px solid #3b82f6; padding-left: 1rem; }
-        
-        .xray-glow {
-            box-shadow: 0 0 40px -10px rgba(59, 130, 246, 0.2);
-        }
-
-        body {
-            background-image: radial-gradient(circle at 50% 50%, #111115 0%, #09090B 100%);
-        }
-
-        .content-section p { margin-bottom: 1rem; }
-        .content-section .indent { margin-left: 1.5rem; }
-        .content-section .highlight { color: #fff; font-weight: 500; }
-        
-        /* Стили для списков без стандартных маркеров для чистоты текста */
-        .raw-list p { position: relative; padding-left: 0; margin-bottom: 0.5rem; }
-    </style>
-</head>
-<body class="min-h-screen text-zinc-100 font-sans selection:bg-blue-500/30">
-
-    <!-- Линия сканирования -->
-    <div class="scan-line text-blue-500"></div>
-
-    <header class="relative max-w-5xl mx-auto px-4 md:px-6 pt-20 md:pt-32 pb-12 md:pb-20 overflow-hidden">
-        <div class="absolute top-0 right-0 w-full md:w-2/3 h-full opacity-40 pointer-events-none">
-            <img src="xray.jfif" alt="Рентген мозга" class="w-full h-full object-contain object-right-top mix-blend-lighten">
-            <div class="absolute inset-0 hero-image-overlay"></div>
-        </div>
-
-        <div class="relative z-10 space-y-6 md:space-y-8 max-w-2xl">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-medium">
-                <span class="relative flex h-2 w-2">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-                </span>
-                Диагностика системы
-            </div>
-            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold leading-tight tracking-tighter text-white">Рентген бизнеса</h1>
-            <div class="text-lg md:text-2xl text-zinc-400 leading-relaxed font-light">
-                <p>Ты не видишь, где у тебя проблема <br> пока смотришь на бизнес «снаружи»</p>
-                <p class="mt-4 text-zinc-100 font-normal">👉 я показываю, что происходит на самом деле <br> и собираю решение под тебя</p>
-            </div>
-        </div>
-    </header>
-
-    <main class="max-w-3xl mx-auto px-4 md:px-6 pb-24">
-        
-        <!-- БЛОК 1 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500 hover:border-zinc-600">
-            <button onclick="toggleAccordion(1)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">01</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Точка А</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-1" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-1" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <p class="highlight">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
-                        <p>Ты сейчас не в кризисе.</p>
-                        <p>Ты сейчас в системе, которая работает вот так:</p>
-                        <div class="indent space-y-2 mb-4">
-                            <p>ты постоянно закрываешь дыры</p>
-                            <p>деньги приходят не из системы, а из напряжения</p>
-                            <p>ты держишь всё на себе</p>
-                            <p>у тебя есть люди, оборудование, ресурсы <br> но они не складываются в управляемую модель</p>
-                        </div>
-                        <div class="bg-blue-500/5 p-6 rounded-2xl node-accent border border-blue-500/10 my-6">
-                            <p class="text-blue-400 uppercase text-xs tracking-widest font-bold mb-2">И самое важное:</p>
-                            <p class="highlight">👉 ты каждый день действуешь <br> 👉 но это не даёт тебе выхода</p>
-                        </div>
-                        <p>Это не «плохо работает бизнес»</p>
-                        <p>Это другой уровень проблемы.</p>
-                        <div class="mt-8 space-y-4">
-                            <p class="highlight">Есть два состояния бизнеса</p>
-                            <div class="grid gap-6">
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800">
-                                    <p class="highlight mb-3">1. Когда ты управляешь системой</p>
-                                    <div class="text-sm space-y-2">
-                                        <p>есть понятный поток клиентов</p>
-                                        <p>есть оборотка</p>
-                                        <p>есть решения на несколько шагов вперёд</p>
-                                    </div>
-                                </div>
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800">
-                                    <p class="highlight mb-3">2. Когда ты тушишь пожары</p>
-                                    <div class="text-sm space-y-2">
-                                        <p>нет запаса</p>
-                                        <p>всё завязано на тебе</p>
-                                        <p>решения принимаются из «надо срочно»</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p>Ты сейчас во втором состоянии.</p>
-                        </div>
-                        <div class="mt-10 pt-8 border-t border-zinc-800">
-                            <p class="highlight">Почему это не заканчивается</p>
-                            <p>Ты сейчас пытаешься решить ситуацию действиями:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>найти клиентов</p>
-                                <p>где-то занять деньги</p>
-                                <p>что-то продать</p>
-                                <p>договориться</p>
-                            </div>
-                            <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800 my-4">
-                                <p class="highlight">Но: 👉 это всё решения внутри той же системы</p>
-                            </div>
-                            <p>А сама система устроена так, что:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>деньги приходят рывками</p>
-                                <p>нет запаса</p>
-                                <p>нет управляемого потока</p>
-                                <p>ты — центр всего</p>
-                            </div>
-                        </div>
-                        <div class="bg-zinc-900/80 p-6 rounded-2xl border border-zinc-800 mt-6">
-                            <p class="highlight mb-3">📌 Это и есть уровень хаоса:</p>
-                            <div class="indent space-y-1">
-                                <p>много действий</p>
-                                <p>мало системы</p>
-                                <p>решения из давления</p>
-                            </div>
-                        </div>
-                        <div class="mt-10 space-y-4">
-                            <p>Ты не застрял из-за рынка</p>
-                            <p>Ты застрял потому что:</p>
-                            <p class="highlight">👉 ты продолжаешь управлять бизнесом так, как управлял, <br> когда он был меньше и проще</p>
-                            <p>И сейчас:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>масштаб уже больше</p>
-                                <p>нагрузка больше</p>
-                                <p>а логика управления — та же</p>
-                            </div>
-                            <p class="highlight">👉 и из-за этого система не собирается</p>
-                        </div>
-                        <p class="mt-6">Ты одновременно:</p>
-                        <div class="indent space-y-1 mb-4">
-                            <p>понимаешь, что нужно масштабироваться</p>
-                            <p>понимаешь, что нужна система</p>
-                            <p>ищешь РОПа</p>
-                            <p>думаешь про инвестора</p>
-                        </div>
-                        <p class="highlight">НО: 👉 по факту продолжаешь работать в режиме «сам всё разрулю»</p>
-                        <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 mt-8">
-                            <p class="highlight mb-3 uppercase text-xs tracking-widest opacity-60">И вот здесь возникает главный внутренний конфликт:</p>
-                            <p class="text-xl">👉 ты уже не можешь так работать <br> 👉 но по-другому система не выстроена</p>
-                            <p class="mt-4 text-blue-400 font-mono text-sm italic">понимание есть → действия старые → результата нет → накапливается давление</p>
-                        </div>
-                        <div class="pt-10">
-                            <p class="font-bold text-lg text-white bg-blue-600/20 inline-block px-6 py-4 rounded-2xl border border-blue-500/30 xray-glow shadow-lg">
-                                Итог блока 1: Ты в системе, которая не может дать другой результат.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- БЛОК 2 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
-            <button onclick="toggleAccordion(2)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">02</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">БЛОК 2 — «где ты сейчас на самом деле»</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-2" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-2" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <p class="highlight text-xl">Любой бизнес (и человек) проходит через три состояния:</p>
-                        <div class="space-y-6 mt-6">
-                            <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
-                                <p class="highlight text-xl mb-4 uppercase tracking-tighter">🧱 1. ХАОС</p>
-                                <div class="space-y-4">
-                                    <p class="highlight italic">Как это выглядит:</p>
-                                    <div class="indent space-y-1">
-                                        <p>постоянно что-то горит</p>
-                                        <p>решения принимаются «надо срочно»</p>
-                                        <p>деньги приходят рывками</p>
-                                        <p>нет запаса</p>
-                                        <p>всё держится на тебе</p>
-                                        <p>много движений — мало результата</p>
-                                    </div>
-                                    <div class="pt-4 border-t border-zinc-800">
-                                        <p class="highlight italic">Как это звучит :</p>
-                                        <div class="indent text-sm md:text-base opacity-80 space-y-1 mt-2">
-                                            <p>«надо сейчас как-то выкрутиться»</p>
-                                            <p>«где взять деньги»</p>
-                                            <p>«надо дожать»</p>
-                                            <p>«сейчас сезон — надо выжать»</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
-                                <p class="highlight text-xl mb-4 uppercase tracking-tighter">🧱 2. СТАБИЛИЗАЦИЯ</p>
-                                <div class="space-y-4">
-                                    <p class="highlight italic">Как это выглядит:</p>
-                                    <div class="indent space-y-1">
-                                        <p>есть понятный поток клиентов</p>
-                                        <p>есть оборотка</p>
-                                        <p>есть структура</p>
-                                        <p>решения не из срочности, а из расчёта</p>
-                                        <p>ты не тушишь пожары каждый день</p>
-                                    </div>
-                                    <p class="highlight mt-4 italic">Но важно:</p>
-                                    <p class="text-blue-400">👉 здесь ещё нет масштабирования</p>
-                                    <p class="text-blue-400">👉 это уровень «собрал систему, она держится»</p>
-                                </div>
-                            </div>
-                            <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
-                                <p class="highlight text-xl mb-4 uppercase tracking-tighter">🧱 3. РОСТ / СИСТЕМА</p>
-                                <div class="space-y-4">
-                                    <p class="highlight italic">Как это выглядит:</p>
-                                    <div class="indent space-y-1">
-                                        <p>бизнес работает не на тебе</p>
-                                        <p>есть управляемая модель</p>
-                                        <p>можно планировать вперёд</p>
-                                        <p>масштаб — это следствие системы</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="mt-12 pt-10 border-t border-zinc-800">
-                            <p class="highlight text-2xl uppercase tracking-tighter">где ты сейчас?</p>
-                            <p class="mt-4">Ты не просто в хаосе.</p>
-                            <p>Ты как будто между уровнями застрял.</p>
-                            <p class="highlight">Почему:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>ты уже понимаешь, что нужна система</p>
-                                <p>ты ищешь РОПа</p>
-                                <p>ты думаешь про инвестора</p>
-                                <p>ты понимаешь, что надо масштабироваться</p>
-                            </div>
-                            <p class="highlight text-xl mt-6">НО: 👉 действуешь ты всё равно как в хаосе</p>
-                            <p class="text-zinc-500 italic indent">(сам, из срочности, без системы)</p>
-                            <p class="mt-4">У тебя голова уже в следующем уровне <br> а бизнес — в предыдущем</p>
-                        </div>
-                        <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 mt-8">
-                            <p class="highlight mb-3">📌 И вот это и создаёт:</p>
-                            <div class="indent space-y-1">
-                                <p>постоянное напряжение</p>
-                                <p>ощущение «я могу больше, но не получается»</p>
-                                <p>застревание</p>
-                            </div>
-                        </div>
-                        <div class="mt-10">
-                            <p class="highlight">Ты не в точке: 👉 «не получается»</p>
-                            <p class="highlight text-xl uppercase">Ты в точке: 👉 старая модель больше не тянет твой уровень</p>
-                        </div>
-                        <div class="mt-10 space-y-4 border-l-2 border-blue-500/30 pl-6">
-                            <p class="highlight uppercase text-xs tracking-widest text-blue-400">Смотри, что важно понять</p>
-                            <p>Проблема не в том, что:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>нет клиентов</p>
-                                <p>нет рекламы</p>
-                                <p>нет людей</p>
-                            </div>
-                            <p class="highlight text-xl">Проблема в том, что: <br> 👉 у тебя нет уровня системы, которая может это удержать</p>
-                        </div>
-                        <div class="pt-10">
-                            <p class="font-bold text-lg text-white bg-blue-600/20 inline-block px-6 py-4 rounded-2xl border border-blue-500/30 xray-glow">
-                                Итог блока 2: тебе нужна другая логика бизнеса
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- БЛОК 3 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
-            <button onclick="toggleAccordion(3)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">03</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">🔥 БЛОК 3 — «почему это не решается действиями»</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-3" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-3" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <p>Ты сейчас пытаешься решить ситуацию через действия:</p>
-                        <div class="indent space-y-1 mb-4">
-                            <p>найти клиентов</p>
-                            <p>нанять людей</p>
-                            <p>вложиться в рекламу</p>
-                            <p>найти инвестора</p>
-                        </div>
-                        <p class="highlight">👉 Но это всё — один и тот же уровень</p>
-                        <div class="bg-amber-500/10 border border-amber-500/20 p-8 rounded-[2rem] my-8 relative overflow-hidden">
-                            <p class="font-black text-amber-500 text-3xl uppercase tracking-tighter mb-4">💥 Ключевая мысль</p>
-                            <p class="highlight text-2xl leading-tight">Ты пытаешься решить системную проблему операционными действиями</p>
-                        </div>
-                        <p>Если бы проблема была: <br> 👉 «не хватает клиентов» <br> то реклама бы это решила.</p>
-                        <p>Но у тебя:</p>
-                        <div class="indent space-y-1 mb-4">
-                            <p>нет оборотки</p>
-                            <p>нет устойчивого потока</p>
-                            <p>нет структуры продаж</p>
-                            <p>нет понятной модели, как деньги приходят</p>
-                        </div>
-                        <p class="highlight text-xl mt-4">👉 значит проблема не в клиентах</p>
-                        <p class="mt-8">Даже если сейчас тебе дать клиентов — ситуация не стабилизируется</p>
-                        <p>Почему:</p>
-                        <div class="indent space-y-1 mb-4">
-                            <p>ты их не сможешь системно обработать</p>
-                            <p>ты не сможешь удержать поток</p>
-                            <p>деньги снова уйдут в дыры</p>
-                        </div>
-                        <p class="highlight text-xl">👉 и ты вернёшься туда же</p>
-                        <p class="mt-6 font-medium italic">И дело не в людях. И не в деньгах. <br> 👉 у тебя нет модели, которая это удерживает</p>
-                        
-                        <div class="space-y-6 my-10">
-                            <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800">
-                                <p class="highlight italic mb-3">Сейчас у тебя бизнес работает как:</p>
-                                <p class="highlight uppercase tracking-tight text-xl mb-3 text-red-400">👉 набор действий</p>
-                                <div class="indent text-sm opacity-70 space-y-1">
-                                    <p>где-то купили</p>
-                                    <p>где-то продали</p>
-                                    <p>где-то договорились</p>
-                                    <p>где-то перекрыли</p>
-                                </div>
-                            </div>
-                            <div class="bg-zinc-950 p-6 rounded-2xl border border-blue-500/20 shadow-[inset_0_0_20px_rgba(59,130,246,0.05)]">
-                                <p class="highlight italic mb-3">А должен работать как:</p>
-                                <p class="highlight uppercase tracking-tight text-xl mb-3 text-blue-400">👉 система</p>
-                                <div class="indent text-sm opacity-70 space-y-1">
-                                    <p class="highlight">где заранее понятно:</p>
-                                    <p>откуда приходят клиенты</p>
-                                    <p>как они доходят до сделки</p>
-                                    <p>как ты обеспечиваешь объём</p>
-                                    <p>как деньги возвращаются в оборот</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <p class="highlight text-2xl text-center my-10">Ты сейчас не управляешь бизнесом <br> ты его удерживаешь</p>
-                        
-                        <div class="bg-zinc-900/40 p-6 rounded-3xl border border-zinc-800">
-                            <p>То, что ты вообще сейчас держишь это всё:</p>
-                            <div class="indent space-y-1 mt-2">
-                                <p>с кредитами</p>
-                                <p>с минусом</p>
-                                <p>с этим объёмом</p>
-                                <p>с людьми</p>
-                            </div>
-                            <p class="highlight mt-6 italic text-zinc-100">👉 это говорит, что у тебя сильная управленческая база</p>
-                            <p class="highlight italic">НО: 👉 ты её используешь, чтобы выживать, а не строить</p>
-                        </div>
-                        
-                        <div class="mt-12 space-y-6">
-                            <p class="highlight">Есть два типа работы с бизнесом</p>
-                            <div class="indent space-y-4">
-                                <div>
-                                    <p class="highlight">1. Операционный уровень</p>
-                                    <div class="indent text-sm opacity-70 mt-1 space-y-1">
-                                        <p>реклама</p>
-                                        <p>найм</p>
-                                        <p>продажи</p>
-                                        <p>процессы</p>
-                                    </div>
-                                    <p class="mt-2">👉 это то, что ты уже пробовал</p>
-                                </div>
-                                <div>
-                                    <p class="highlight">2. Уровень архитектуры</p>
-                                    <p class="highlight">👉 где собирается сама логика бизнеса:</p>
-                                    <div class="indent text-sm opacity-70 mt-1 space-y-1">
-                                        <p>какая модель денег</p>
-                                        <p>какая модель продаж</p>
-                                        <p>какая модель продукта</p>
-                                        <p>какая последовательность действий</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="bg-blue-600/10 border-l-4 border-blue-500 p-8 rounded-r-3xl my-8">
-                                <p class="font-black text-blue-400 uppercase tracking-widest text-sm mb-2">💥 Ключ</p>
-                                <p class="highlight text-2xl">Пока нет архитектуры — любые действия усиливают хаос</p>
-                            </div>
-                        </div>
-                        <div class="bg-zinc-950 p-8 rounded-3xl border border-zinc-800 mt-10">
-                            <p class="highlight text-center mb-6 uppercase text-xs tracking-widest opacity-60">Итог блока 3:</p>
-                            <div class="text-center space-y-2">
-                                <p>Тебе сейчас не нужен маркетинг</p>
-                                <p>тебе не нужен РОП</p>
-                                <p>тебе не нужен инвестор</p>
-                                <p class="highlight text-xl text-blue-400">👉 тебе нужно: понять, какая у тебя вообще модель бизнеса должна быть дальше</p>
-                            </div>
-                            <div class="bg-white text-zinc-950 p-6 rounded-2xl shadow-2xl mt-8 text-center">
-                                <p class="font-black text-xl md:text-2xl uppercase tracking-tighter italic">Важно: тебе надо пересобрать бизнес</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- БЛОК 4 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
-            <button onclick="toggleAccordion(4)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">04</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">Блок 4 — 👉 есть точка, где это можно собрать</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-4" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-4" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <p>То, что мы сейчас разобрали — это не про «подкрутить что-то»</p>
-                        <p class="highlight">👉 это про то, что у тебя сейчас бизнес в старой логике, которая больше не даёт результата</p>
-                        <p>И это не решается кусками:</p>
-                        <div class="indent space-y-1 mb-4">
-                            <p>отдельно маркетингом</p>
-                            <p>отдельно продажами</p>
-                            <p>отдельно людьми</p>
-                        </div>
-                        <p class="highlight text-xl text-white">Это собирается только целиком</p>
-                        <div class="space-y-6 mt-10">
-                            <p class="highlight uppercase text-xs tracking-widest text-zinc-500 border-b border-zinc-800 pb-2">Это работа, где мы:</p>
-                            <div class="grid gap-4">
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800 flex gap-4">
-                                    <span class="text-blue-500 font-bold">1.</span>
-                                    <div>
-                                        <p class="highlight">Определяем, что у тебя за бизнес на самом деле</p>
-                                        <p class="text-sm opacity-60 italic">(не «пиломатериалы», а модель)</p>
-                                    </div>
-                                </div>
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800 flex gap-4">
-                                    <span class="text-blue-500 font-bold">2.</span>
-                                    <div>
-                                        <p class="highlight">Находим, где он сейчас ломается</p>
-                                        <p class="text-sm opacity-60 italic">где теряются деньги, где нет связки, где ты держишь всё на себе</p>
-                                    </div>
-                                </div>
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800 flex gap-4">
-                                    <span class="text-blue-500 font-bold">3.</span>
-                                    <div>
-                                        <p class="highlight">Собираем новую модель</p>
-                                        <p class="text-sm opacity-60 italic">как приходят деньги, какая логика продаж, какая структура, что должно быть в основе</p>
-                                    </div>
-                                </div>
-                                <div class="bg-zinc-900/40 p-5 rounded-2xl border border-zinc-800 flex gap-4">
-                                    <span class="text-blue-500 font-bold">4.</span>
-                                    <div>
-                                        <p class="highlight">Фиксируем архитектуру</p>
-                                        <p class="text-sm opacity-60 italic">👉 чтобы дальше ты уже не «разгребал» 👉 а управлял</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mt-10 italic">Это не про «сделать красиво» <br> это про то, чтобы у тебя вообще появился управляемый бизнес</p>
-                        <div class="bg-zinc-950 p-6 rounded-3xl border border-zinc-800 mt-8">
-                            <p class="highlight">Ты сейчас в точке, где:</p>
-                            <div class="indent space-y-1">
-                                <p>либо ты продолжаешь держать это всё сам</p>
-                                <p>и оно так и будет качаться</p>
-                            </div>
-                        </div>
-                        <div class="bg-blue-600/20 p-8 rounded-3xl border border-blue-500/30 xray-glow text-center my-10">
-                            <p class="highlight text-2xl uppercase tracking-tighter">Итог блока 4: 👉 либо ты один раз собираешь систему и дальше уже растёшь из неё</p>
-                        </div>
-                        <p class="text-center text-zinc-100 italic">Я не помогаю «делать больше действий» <br> я собираю систему, <br> в которой бизнес начинает работать по-другому</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- БЛОК 5 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500">
-            <button onclick="toggleAccordion(5)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-zinc-800 text-blue-400 font-bold text-lg shrink-0 border border-zinc-700/50">05</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4">БЛОК 5 — «честные рекомендации»</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-5" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-5" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <div class="mb-10 text-center">
-                            <p class="font-black text-blue-500 text-3xl uppercase tracking-tighter mb-4">🔥 БЛОК 5 — ЧЁТКИЕ ДЕЙСТВИЯ</p>
-                            <p class="highlight">Дмитрий, смотри. Ниже — конкретные решения под твою ситуацию. Без теории.</p>
-                        </div>
-
-                        <!-- 5.1 ФОКУС -->
-                        <div class="space-y-6 mb-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 1. ФОКУС: ЧТО ПРОДАВАТЬ СЕЙЧАС</p>
-                            <div class="bg-zinc-900/40 p-6 rounded-2xl border border-zinc-800 space-y-2">
-                                <p class="text-sm uppercase tracking-widest text-zinc-500 mb-2">У тебя сейчас:</p>
-                                <div class="indent space-y-1">
-                                    <p>пиломатериал</p>
-                                    <p>строительство</p>
-                                    <p>поселок</p>
-                                    <p>земля</p>
-                                    <p>попытка инвестора</p>
-                                </div>
-                                <p class="highlight mt-4 italic">👉 это 4–5 направлений, которые тянут ресурс</p>
-                                <p class="highlight">👉 при этом ни одно не даёт стабильного потока</p>
-                            </div>
-                            <p class="highlight italic">Что сделать:</p>
-                            <p class="text-white">👉 выбрать одно направление, которое быстрее всего превращается в деньги</p>
-                            <div class="node-accent border-blue-500 bg-zinc-900/60 p-5 rounded-r-2xl">
-                                <p class="highlight">Судя по твоей ситуации: 👉 это сухой строганный пиломатериал (наличие + скорость)</p>
-                                <div class="mt-3 space-y-1 text-sm md:text-base opacity-80">
-                                    <p class="highlight italic">Почему:</p>
-                                    <div class="indent space-y-1">
-                                        <p>у тебя уже есть производство</p>
-                                        <p>есть понимание продукта</p>
-                                        <p>есть спрос «здесь и сейчас» (строители ищут наличие)</p>
-                                        <p>это быстрее, чем стройка и посёлок</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="highlight mt-6">Дальше: 👉 выбрать одну аудиторию</p>
-                            <p class="indent">НЕ все подряд</p>
-                            <p class="highlight italic">👉 конкретно:</p>
-                            <div class="indent space-y-1">
-                                <p>бригады</p>
-                                <p>мелкие застройщики</p>
-                                <p>частники, которые строят сами</p>
-                            </div>
-                            <p class="highlight mt-6">Дальше: 👉 собрать одно простое предложение</p>
-                            <p class="highlight italic">Пример логики:</p>
-                            <div class="indent">
-                                <p>«Сухой строганный материал в наличии / за 7–10 дней / без ожидания сезона»</p>
-                            </div>
-                            <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 mt-6">
-                                <p class="highlight mb-4 italic">И дальше — не думать, а делать: Разместить это:</p>
-                                <div class="indent space-y-2 text-sm md:text-base">
-                                    <p>Авито (10–20 объявлений с разными формулировками)</p>
-                                    <p>ВК (группа + 5–10 постов + закреп с оффером)</p>
-                                    <p>Юла (если есть в регионе)</p>
-                                    <p>Телеграм-чаты по стройке / объявления</p>
-                                    <p>2ГИС (если есть компания — обновить описание)</p>
-                                </div>
-                                <p class="text-blue-400 mt-6 text-center italic">👉 и каждый день добавлять / тестировать</p>
-                            </div>
-                            <p class="text-center font-black text-amber-500 text-xl mt-6 uppercase tracking-tighter leading-tight">💥 Суть: не распыляться, не думать про «бренд» — а просто зафиксировать один поток денег</p>
-                        </div>
-
-                        <!-- 5.2 ДЕНЬГИ -->
-                        <div class="space-y-6 mb-12 border-t border-zinc-800 pt-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 2. ДЕНЬГИ: КАК УБРАТЬ КАССОВЫЙ РАЗРЫВ</p>
-                            <div class="bg-zinc-900/40 p-6 rounded-2xl border border-zinc-800">
-                                <p>Ты сам сказал: <br> 👉 тебе нужно 5–7 млн на оборотку <br> 👉 без неё ты не можешь держать наличие</p>
-                                <p class="highlight mt-3">Проблема: ты сначала вкладываешь → потом продаёшь</p>
-                            </div>
-                            <p class="highlight italic">Что сделать:</p>
-                            <p class="text-white">👉 перевернуть модель</p>
-                            <div class="grid gap-4 mt-4">
-                                <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800">
-                                    <p class="highlight mb-2">Вариант 1 (самый простой):</p>
-                                    <p>👉 продавать под заказ с предоплатой</p>
-                                    <p class="italic text-sm opacity-60">Формулировка: «Резерв материала под клиента + запуск в производство»</p>
-                                </div>
-                                <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800">
-                                    <p class="highlight mb-2">Вариант 2:</p>
-                                    <p>👉 делать ограниченные партии под спрос</p>
-                                    <div class="indent text-sm opacity-60">
-                                        <p>не 200–300 кубов</p>
-                                        <p>а 50–100</p>
-                                        <p>но чаще</p>
-                                    </div>
-                                </div>
-                                <div class="bg-zinc-950 p-5 rounded-2xl border border-zinc-800">
-                                    <p class="highlight mb-2">Вариант 3:</p>
-                                    <p>👉 фиксировать сделки заранее</p>
-                                    <div class="indent text-sm opacity-60">
-                                        <p>брать бронь</p>
-                                        <p>фиксировать цену</p>
-                                        <p>запускать сушку под конкретный заказ</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-center font-black text-amber-500 text-xl mt-6 uppercase tracking-tighter">💥 Суть: тебе сейчас важна не прибыль с куба, а чтобы деньги возвращались быстрее</p>
-                        </div>
-
-                        <!-- 5.3 ПРОДАЖИ -->
-                        <div class="space-y-6 mb-12 border-t border-zinc-800 pt-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 3. ПРОДАЖИ: КАК СДЕЛАТЬ ПРОСТУЮ СХЕМУ</p>
-                            <p>Сейчас у тебя:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>👉 нет понятного потока</p>
-                                <p>👉 всё через тебя</p>
-                            </div>
-                            <p class="highlight italic">Что сделать:</p>
-                            <p class="highlight">👉 зафиксировать очень простую модель</p>
-                            <div class="bg-blue-900/10 p-6 rounded-3xl border border-blue-500/20 my-6">
-                                <p class="highlight uppercase text-xs tracking-[0.3em] mb-4 text-blue-400 font-bold">Схема:</p>
-                                <div class="text-lg md:text-xl font-black italic tracking-tighter leading-relaxed">
-                                    Лид пришёл (Авито / ВК) → Ему сразу дают: наличие / сроки, цену → Дожим через звонок → Предоплата → Запуск
-                                </div>
-                            </div>
-                            <p class="highlight">Твоя задача: 👉 не «строить отдел продаж» 👉 а зафиксировать этот процесс</p>
-                            <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 mt-6">
-                                <p class="highlight italic mb-4">Прямо что сделать:</p>
-                                <div class="indent space-y-2 text-sm md:text-base">
-                                    <p>выписать 5 частых вопросов клиентов</p>
-                                    <p>прописать ответы</p>
-                                    <p>сделать 1 короткий скрипт</p>
-                                </div>
-                                <div class="mt-6 border-t border-zinc-800 pt-4">
-                                    <p class="text-xs uppercase tracking-widest text-zinc-500 mb-3 italic font-bold">Пример вопросов:</p>
-                                    <div class="indent text-sm opacity-80 space-y-1">
-                                        <p>«есть ли в наличии?»</p>
-                                        <p>«сколько ждать?»</p>
-                                        <p>«какая цена?»</p>
-                                    </div>
-                                    <p class="highlight mt-4 italic text-center">👉 и это уже можно давать любому человеку</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- 5.4 ЛЮДИ -->
-                        <div class="space-y-6 mb-12 border-t border-zinc-800 pt-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 4. ЛЮДИ: КАК ТЕБЯ РАЗГРУЗИТЬ</p>
-                            <p>Сейчас:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>👉 ты всё держишь сам</p>
-                                <p>👉 из-за этого не видишь вперёд</p>
-                            </div>
-                            <p class="highlight italic">Что сделать:</p>
-                            <p>👉 не искать «идеального РОПа»</p>
-                            <p class="highlight italic">👉 взять 1–2 человека на простые задачи:</p>
-                            <div class="indent italic space-y-1 mb-6">
-                                <p class="highlight">Им дать:</p>
-                                <p>Размещение объявлений</p>
-                                <p>Ответы на входящие</p>
-                                <p>Сбор заявок</p>
-                            </div>
-                            <p class="highlight text-xl italic underline decoration-blue-500 decoration-2 underline-offset-8 mb-6">И сразу подключить ИИ:</p>
-                            <p class="highlight italic">Как использовать ИИ (конкретно): 👉 дать им ChatGPT и задачи:</p>
-                            <div class="grid gap-6 mt-6">
-                                <div class="bg-zinc-900/60 p-6 rounded-2xl border border-zinc-800 shadow-xl">
-                                    <p class="highlight mb-3 uppercase text-xs tracking-widest text-blue-400">1. Объявления</p>
-                                    <p class="text-sm opacity-90 italic leading-relaxed">«Сделай 10 вариантов объявления для Авито: сухой строганный пиломатериал, наличие, быстрые сроки»</p>
-                                </div>
-                                <div class="bg-zinc-900/60 p-6 rounded-2xl border border-zinc-800 shadow-xl">
-                                    <p class="highlight mb-3 uppercase text-xs tracking-widest text-blue-400">2. Ответы клиентам</p>
-                                    <p class="text-sm opacity-90 italic leading-relaxed">«Напиши ответ клиенту: спрашивает цену и сроки, нужно закрыть на звонок»</p>
-                                </div>
-                                <div class="bg-zinc-900/60 p-6 rounded-2xl border border-zinc-800 shadow-xl">
-                                    <p class="highlight mb-3 uppercase text-xs tracking-widest text-blue-400">3. Обработка диалогов</p>
-                                    <p class="text-sm opacity-90 italic leading-relaxed">«Вот переписка — что ответить, чтобы довести до оплаты»</p>
-                                </div>
-                            </div>
-                            <p class="text-center font-black text-amber-500 text-xl mt-8 uppercase tracking-tighter">💥 Суть: люди не должны думать — у них должны быть задачи и инструменты</p>
-                        </div>
-
-                        <!-- 5.5 ЗЕМЛЯ -->
-                        <div class="space-y-6 mb-12 border-t border-zinc-800 pt-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 5. ЗЕМЛЯ / ПОСЁЛОК</p>
-                            <p>Сейчас:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>👉 ты вложился</p>
-                                <p>👉 продаж нет</p>
-                                <p>👉 проект не просчитан</p>
-                            </div>
-                            <p class="highlight italic">Что сделать:</p>
-                            <p class="highlight italic">Есть 2 варианта:</p>
-                            <div class="space-y-6 mt-6">
-                                <div class="p-6 rounded-3xl bg-zinc-950 border border-zinc-800">
-                                    <p class="highlight mb-2 text-red-400">Вариант 1 (быстрый):</p>
-                                    <p class="highlight">👉 временно не вкладывать туда ни деньги, ни время</p>
-                                </div>
-                                <div class="p-6 rounded-3xl bg-zinc-950 border border-emerald-500/20 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
-                                    <p class="highlight mb-4 text-emerald-400">Вариант 2 (если трогать):</p>
-                                    <p class="highlight italic">👉 максимально упростить</p>
-                                    <div class="indent space-y-4 mt-4">
-                                        <p class="text-zinc-500">Не: ❌ «коттеджный посёлок»</p>
-                                        <p class="highlight">А: 👉 простое предложение</p>
-                                        <p class="highlight italic">Пример:</p>
-                                        <div class="indent space-y-1 opacity-80">
-                                            <p>«участок + дом под ключ»</p>
-                                            <p>или «участок с подрядом»</p>
-                                        </div>
-                                        <div class="mt-4 space-y-1 opacity-80">
-                                            <p>👉 без сложной концепции</p>
-                                            <p>👉 без инвестора</p>
-                                            <p>👉 через те же площадки (Авито / ВК)</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-center font-black text-amber-500 text-xl mt-6 uppercase tracking-tighter leading-tight">💥 Суть: если актив не даёт деньги — он должен либо упрощаться, либо замораживаться</p>
-                        </div>
-
-                        <!-- 5.6 ИНВЕСТОР -->
-                        <div class="space-y-6 mb-12 border-t border-zinc-800 pt-12">
-                            <p class="highlight text-2xl uppercase tracking-tighter">🧱 6. ПРО ИНВЕСТОРА</p>
-                            <p>Сейчас у тебя:</p>
-                            <div class="indent space-y-1 mb-4">
-                                <p>👉 нет просчитанной модели</p>
-                                <p>👉 нет стабильного потока</p>
-                                <p>👉 нет понятной экономики</p>
-                            </div>
-                            <p class="highlight uppercase text-xs tracking-widest text-zinc-500 mb-2 font-bold">Что это значит:</p>
-                            <p class="highlight italic">👉 инвестору ты не покажешь:</p>
-                            <div class="indent space-y-1 mb-6">
-                                <p>сколько он заработает</p>
-                                <p>за счёт чего</p>
-                                <p>с какой вероятностью</p>
-                            </div>
-                            <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-800">
-                                <p class="highlight italic mb-3">Что сделать:</p>
-                                <p class="highlight">👉 не тратить сейчас ресурс на поиск инвестора</p>
-                                <p class="highlight italic mt-4">👉 сначала:</p>
-                                <div class="indent space-y-1 opacity-80 mb-4">
-                                    <p>зафиксировать поток продаж</p>
-                                    <p>понять цифры</p>
-                                    <p>стабилизировать оборот</p>
-                                </div>
-                                <p class="highlight italic">И только потом:</p>
-                                <p class="highlight">👉 идти с конкретной моделью</p>
-                            </div>
-                        </div>
-
-                        <!-- СТРАТЕГИИ -->
-                        <div class="bg-zinc-950/80 border border-zinc-800 rounded-[3rem] p-8 md:p-14 space-y-10 relative overflow-hidden shadow-2xl mt-12">
-                            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-amber-500 to-emerald-500 opacity-50"></div>
-                            <p class="text-white font-black text-3xl tracking-tighter text-center uppercase">⚡️ ФИНАЛ — 3 СТРАТЕГИИ</p>
-                            <div class="grid gap-12">
-                                <div class="flex gap-6 items-start">
-                                    <div class="w-6 h-6 rounded-full bg-red-500 mt-1 shrink-0 shadow-[0_0_15px_rgba(239,68,68,0.5)]"></div>
-                                    <div class="space-y-3">
-                                        <p class="highlight text-xl mb-1 uppercase tracking-tight">🔴 КОРОТКАЯ (0–2 месяца)</p>
-                                        <p class="highlight italic mb-2 text-zinc-500">👉 задача: вытащить деньги</p>
-                                        <div class="indent space-y-1 text-sm opacity-80 leading-relaxed">
-                                            <p>выбрать 1 продукт (пиломатериал)</p>
-                                            <p>1 аудиторию</p>
-                                            <p>забить площадки</p>
-                                            <p>продавать под заказ / с предоплатой</p>
-                                            <p>разгрузить себя через 1–2 человек + ИИ</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex gap-6 items-start">
-                                    <div class="w-6 h-6 rounded-full bg-amber-500 mt-1 shrink-0 shadow-[0_0_15px_rgba(245,158,11,0.5)]"></div>
-                                    <div class="space-y-3">
-                                        <p class="highlight text-xl mb-1 uppercase tracking-tight">🟡 СРЕДНЯЯ (2–6 месяцев)</p>
-                                        <p class="highlight italic mb-2 text-zinc-500">👉 задача: стабилизировать</p>
-                                        <div class="indent space-y-1 text-sm opacity-80 leading-relaxed">
-                                            <p>зафиксировать поток клиентов</p>
-                                            <p>собрать простую модель продаж</p>
-                                            <p>выйти в стабильную оборотку</p>
-                                            <p>понять реальные цифры</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="flex gap-6 items-start">
-                                    <div class="w-6 h-6 rounded-full bg-emerald-500 mt-1 shrink-0 shadow-[0_0_15px_rgba(16,185,129,0.5)]"></div>
-                                    <div class="space-y-3">
-                                        <p class="highlight text-xl mb-1 uppercase tracking-tight">🟢 ДОЛГАЯ (6+ месяцев)</p>
-                                        <p class="highlight italic mb-2 text-zinc-500">👉 задача: масштаб</p>
-                                        <div class="indent space-y-1 text-sm opacity-80 leading-relaxed">
-                                            <p>упаковать модель</p>
-                                            <p>выстроить систему</p>
-                                            <p>подключать инвестора</p>
-                                            <p>развивать посёлок как отдельный проект</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="pt-10 border-t border-zinc-800 text-center space-y-4">
-                                <p class="font-black text-white text-2xl uppercase tracking-tighter italic">💥 Последняя точка</p>
-                                <p class="highlight text-xl italic text-zinc-300">👉 сейчас твоя задача не «вырасти»</p>
-                                <p class="highlight text-xl italic text-zinc-300">👉 а собрать устойчивую основу</p>
-                                <p class="highlight text-xl text-blue-400 mt-4">И только потом: масштабироваться</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- БЛОК 6 -->
-        <div class="glass-card xray-glow rounded-3xl overflow-hidden mb-6 transition-all duration-500 border-blue-500/20">
-            <button onclick="toggleAccordion(6)" class="w-full flex justify-between items-center p-6 md:p-8 text-left group cursor-pointer transition-colors">
-                <div class="flex items-center gap-5">
-                    <div class="flex items-center justify-center w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-600 text-white font-bold text-lg shrink-0 shadow-[0_0_25px_rgba(37,99,235,0.4)]">06</div>
-                    <h2 class="text-xl md:text-2xl font-semibold text-zinc-100 pr-4 uppercase tracking-tighter">🔥 БЛОК 6 — ПЛАТНЫЙ ПАКЕТ</h2>
-                </div>
-                <div class="flex items-center justify-center w-10 h-10 rounded-full bg-zinc-800 shrink-0">
-                    <svg id="icon-6" class="w-5 h-5 text-zinc-400 transition-transform duration-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-                </div>
-            </button>
-            <div id="content-6" class="grid grid-rows-[0fr] opacity-0 transition-all duration-500 ease-in-out">
-                <div class="overflow-hidden">
-                    <div class="px-6 md:px-8 pb-10 pt-2 border-t border-zinc-800/50 content-section text-zinc-400 text-base md:text-lg">
-                        <div class="py-12 text-center md:text-left space-y-6">
-                            <h3 class="text-4xl font-black text-white tracking-tighter uppercase leading-tight italic">Рентген твоего бизнеса</h3>
-                            <p class="highlight text-2xl leading-snug">За 3–4 часа покажу, где у тебя деньги, где потери <br> и соберу понятную модель, как тебе дальше работать</p>
-                        </div>
-                        
-                        <div class="space-y-6">
-                            <p>То, что я тебе сейчас описала — это картина и шаги, которые ты уже можешь начать делать</p>
-                            <p class="highlight text-xl text-blue-400">👉 но чтобы это реально заработало, это нужно собрать под тебя целиком</p>
-                            <p class="highlight italic text-2xl mt-8">Я могу это сделать в формате навигационной сессии</p>
-                            <p class="highlight italic">👉 3–4 часа работы, где мы:</p>
-                            <div class="indent space-y-2 mb-8">
-                                <p>глубоко разбираем твою ситуацию</p>
-                                <p>смотрим цифры (где они есть)</p>
-                                <p>раскладываем все направления</p>
-                                <p>находим, где у тебя деньги, а где потери</p>
-                            </div>
-                            <p class="highlight italic mt-6">👉 и дальше я забираю это в работу. И через 2 дня возвращаю тебе готовое решение</p>
-                        </div>
-
-                        <div class="bg-zinc-950 border border-zinc-800 rounded-[2.5rem] p-8 md:p-14 mb-12 mt-12 shadow-2xl relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
-                                <svg class="w-24 h-24 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                            </div>
-                            <h4 class="text-blue-500 font-bold uppercase text-xs tracking-[0.4em] mb-10 border-b border-zinc-900 pb-4">🔒 ЧТО ВНУТРИ (ПОЛНАЯ СБОРКА ПОД ТЕБЯ)</h4>
-                            <p class="italic mb-10 text-zinc-300 font-medium">Здесь не «советы» и не теория 👉 здесь собрана конкретная логика, что тебе делать с твоим бизнесом дальше</p>
-                            <p class="highlight mb-10 uppercase text-xs tracking-widest text-zinc-500">После сессии ты получаешь:</p>
-                            
-                            <div class="space-y-10">
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">1. Понимание, на чём тебе зарабатывать сейчас</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>какой продукт брать в основу</p>
-                                        <p>что убрать, чтобы не распыляться</p>
-                                        <p>где у тебя реальные деньги, а где иллюзия движения</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">2. Конкретную аудиторию под твой продукт</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>кому продавать в первую очередь</p>
-                                        <p>кто реально покупает</p>
-                                        <p>кто даёт быстрые деньги</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">3. Готовое предложение под рынок</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>как сформулировать, чтобы заходило</p>
-                                        <p>на чём делать акцент</p>
-                                        <p>что говорить клиенту, чтобы он не «думал», а покупал</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">4. Разбор рынка по твоим регионам</p>
-                                    <p class="text-zinc-300 italic text-sm mb-2">Марий Эл / Татарстан / Чувашия:</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>где есть спрос</p>
-                                        <p>где проще зайти</p>
-                                        <p>какие цены</p>
-                                        <p>как сейчас продают другие</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">5. Разбор конкурентов</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>кто уже работает в твоей нише</p>
-                                        <p>через что они продают</p>
-                                        <p>чем цепляют</p>
-                                        <p>где у них слабые места</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">6. Понимание, куда тебе идти за клиентами</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>конкретные площадки</p>
-                                        <p>что использовать</p>
-                                        <p>куда не тратить время</p>
-                                        <p>где реально брать заявки</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">7. Полевые задачи под твой рынок</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>что проверить</p>
-                                        <p>кому позвонить</p>
-                                        <p>какие вопросы задать</p>
-                                        <p>как быстро понять, есть спрос или нет</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">8. Чёткое решение по земле</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>что с ней делать сейчас</p>
-                                        <p>есть ли смысл её продавать</p>
-                                        <p>как это можно сделать</p>
-                                        <p>или почему её лучше пока не трогать</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">9. Понимание по инвестору</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>нужен ли он тебе сейчас</p>
-                                        <p>что ты можешь ему показать</p>
-                                        <p>когда имеет смысл его привлекать</p>
-                                        <p>и когда это только усложнит ситуацию</p>
-                                    </div>
-                                </div>
-                                <div class="border-l-2 border-blue-500/30 pl-8 transition-all hover:border-blue-500">
-                                    <p class="highlight text-xl mb-2 italic">10. Где и как внедрить ИИ в твою работу</p>
-                                    <div class="text-sm opacity-60 space-y-1">
-                                        <p>какие задачи ему отдать</p>
-                                        <p>где он реально экономит время</p>
-                                        <p>как использовать его в продажах и работе с клиентами</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="grid md:grid-cols-2 gap-8 mb-16">
-                            <div class="p-8 rounded-[2.5rem] bg-zinc-950 border border-zinc-800 shadow-xl">
-                                <p class="highlight mb-4 uppercase text-xs tracking-widest text-zinc-500 italic font-bold">Формат</p>
-                                <p class="highlight">👉 ты получаешь это в виде структурированного документа</p>
-                                <p class="text-sm opacity-70 mt-2 italic">👉 к которому можно возвращаться и по которому можно действовать</p>
-                            </div>
-                            <div class="p-8 rounded-[2.5rem] bg-zinc-950 border border-zinc-800 shadow-xl">
-                                <p class="highlight mb-4 uppercase text-xs tracking-widest text-zinc-500 italic font-bold">Результат</p>
-                                <div class="space-y-2">
-                                    <p class="highlight">👉 у тебя появляется понятное направление</p>
-                                    <p class="highlight">👉 ты перестаёшь метаться между вариантами</p>
-                                    <p class="highlight">👉 начинаешь двигаться в одну сторону</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="relative w-full overflow-hidden rounded-[4.5rem] border border-blue-500/30 bg-zinc-950 shadow-2xl">
-                            <div class="absolute inset-0 opacity-10 pointer-events-none">
-                                <img src="xray.jfif" class="w-full h-full object-cover grayscale mix-blend-lighten opacity-40">
-                            </div>
-                            <div class="relative z-10 p-12 md:p-20 flex flex-col items-center text-center">
-                                <div class="w-24 h-24 bg-blue-600/10 rounded-[2.5rem] flex items-center justify-center mb-10 border border-blue-500/30 xray-glow shadow-blue-500/20">
-                                    <svg class="w-12 h-12 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                                </div>
-                                <h3 class="text-3xl font-black text-white mb-8 uppercase tracking-tighter leading-tight italic">🔒 Доступ к полной сборке — после оплаты</h3>
-                                <p class="text-zinc-400 mb-14 max-w-sm italic text-xl leading-snug">**Это не информация. <br> Это решение под твою ситуацию.**</p>
-                                <div class="text-[10px] text-zinc-600 mb-2 uppercase tracking-[0.5em] font-black italic">Инвестиция</div>
-                                <div class="text-6xl font-black text-white mb-16 tracking-tighter">50 000 руб.</div>
-                                <button onclick="openModal()" class="w-full max-w-sm bg-white text-zinc-950 px-12 py-7 text-xl font-black uppercase tracking-[0.25em] rounded-[2.5rem] hover:bg-blue-50 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.15)] active:scale-95">
-                                    Получить доступ
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </main>
-
-    <!-- Модальное окно -->
-    <div id="payment-modal" class="hidden fixed inset-0 z-[100] items-center justify-center p-4 bg-[#09090B]/98 backdrop-blur-xl transition-opacity">
-        <div class="bg-zinc-900 border border-zinc-800 max-w-lg w-full rounded-[4rem] shadow-[0_0_100px_rgba(59,130,246,0.1)] overflow-hidden relative xray-glow">
-            <button onclick="closeModal()" class="absolute top-10 right-10 p-4 text-zinc-500 hover:text-white transition-colors bg-zinc-800/50 rounded-full shadow-lg">
-                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-            </button>
-            <div class="p-12 md:p-16">
-                <h3 class="text-3xl font-black text-white mb-12 tracking-tighter text-center uppercase italic">Оформление доступа</h3>
-                <div class="space-y-10 text-zinc-300 text-base md:text-lg leading-relaxed">
-                    <div class="space-y-8">
-                        <p class="text-center italic opacity-80">Я работаю как самозанятая. <br> Оплату принимаю переводом на карту Т-Банка:</p>
-                        <div class="bg-zinc-950 border border-zinc-800 p-10 rounded-[3rem] text-center shadow-inner relative group">
-                            <div class="absolute inset-0 bg-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity rounded-[3rem]"></div>
-                            <p class="text-white font-mono text-2xl tracking-[0.25em] mb-4 relative z-10">2200 7021 1957 4882</p>
-                            <p class="text-zinc-500 text-xs uppercase tracking-[0.3em] font-black relative z-10">Вединеева Ирина Михайловна</p>
-                        </div>
-                        <p class="text-amber-500/80 text-sm font-black italic text-center uppercase tracking-widest">Предложение действует до 25.03.2026</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 gap-10 border-t border-zinc-800 pt-12">
-                        <div>
-                            <p class="text-white font-black uppercase text-[10px] tracking-[0.4em] mb-6 opacity-40 italic">После оплаты я отправляю:</p>
-                            <ul class="list-none space-y-3 text-zinc-100 font-medium">
-                                <li class="flex items-center gap-4"><span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span> чек</li>
-                                <li class="flex items-center gap-4"><span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span> договор</li>
-                            </ul>
-                        </div>
-                        <div>
-                            <p class="text-white font-black uppercase text-[10px] tracking-[0.4em] mb-6 opacity-40 italic">Далее мы согласовываем:</p>
-                            <ul class="list-none space-y-3 text-zinc-100 font-medium">
-                                <li class="flex items-center gap-4"><span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span> дату навигационной сессии</li>
-                                <li class="flex items-center gap-4"><span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></span> техническое задание</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-14 pt-10 border-t border-zinc-800 text-center">
-                    <p class="text-zinc-600 text-[10px] uppercase tracking-[0.4em] font-black leading-relaxed italic">Чек об оплате пришлите <br> в ответном сообщении.</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Кнопка наверх -->
-    <button id="scroll-top" onclick="scrollToTop()" class="fixed bottom-12 right-12 p-6 bg-blue-600/10 border border-blue-500/20 text-blue-400 rounded-[2.5rem] shadow-2xl translate-y-48 opacity-0 transition-all duration-700 z-40 backdrop-blur-2xl hover:bg-blue-600/20 active:scale-90 xray-glow shadow-blue-500/10">
-        <svg class="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="m18 15-6-6-6 6"/></svg>
-    </button>
-
-    <script>
-        function toggleAccordion(id) {
-            const content = document.getElementById('content-' + id);
-            const icon = document.getElementById('icon-' + id);
-            const isOpen = !content.classList.contains('grid-rows-[0fr]');
+          <div className="relative mt-8 w-full overflow-hidden rounded-3xl border border-[#27272A] bg-[#131315]">
             
-            // Закрываем все открытые аккордеоны
-            document.querySelectorAll('[id^="content-"]').forEach(el => {
-                if (el.id !== 'content-' + id) {
-                    el.classList.add('grid-rows-[0fr]', 'opacity-0');
-                    el.classList.remove('grid-rows-[1fr]', 'opacity-100');
-                }
-            });
-            document.querySelectorAll('[id^="icon-"]').forEach(el => {
-                if (el.id !== 'icon-' + id) {
-                    el.classList.remove('rotate-180');
-                }
-            });
+            <div className="absolute inset-0 p-8 blur-md opacity-20 pointer-events-none select-none overflow-hidden flex flex-col justify-between">
+              <div className="space-y-4">
+                <div className="h-4 bg-zinc-500 rounded w-3/4"></div>
+                <div className="h-4 bg-zinc-500 rounded w-full"></div>
+                <div className="h-4 bg-zinc-500 rounded w-5/6"></div>
+              </div>
+              <div className="space-y-4 mt-8">
+                <div className="h-4 bg-zinc-500 rounded w-2/3"></div>
+                <div className="h-4 bg-zinc-500 rounded w-full"></div>
+                <div className="h-4 bg-zinc-500 rounded w-4/5"></div>
+              </div>
+            </div>
 
-            // Переключаем текущий
-            if (isOpen) {
-                content.classList.add('grid-rows-[0fr]', 'opacity-0');
-                content.classList.remove('grid-rows-[1fr]', 'opacity-100');
-                icon.classList.remove('rotate-180');
-            } else {
-                content.classList.remove('grid-rows-[0fr]', 'opacity-0');
-                content.classList.add('grid-rows-[1fr]', 'opacity-100');
-                icon.classList.add('rotate-180');
+            <div className="relative z-10 p-6 md:p-10 bg-[#18181B]/80 backdrop-blur-xl flex flex-col items-center text-center">
+              
+              <div className="w-16 h-16 bg-[#27272A] rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-zinc-700/50">
+                <IconLock className="w-7 h-7 text-zinc-300" />
+              </div>
+              
+              <h3 className="text-xl md:text-2xl font-medium text-white mb-8 max-w-sm uppercase tracking-tighter italic font-black">
+                {CONTENT.block6.lockedSubtitle}
+              </h3>
+
+              <div className="w-full max-w-md text-left space-y-4 mb-10 bg-[#27272A]/30 p-6 rounded-2xl border border-zinc-800">
+                {CONTENT.block6.lockedList.map((item, index) => (
+                  <div key={index} className="flex items-start gap-3">
+                    <IconShieldCheck className="w-5 h-5 text-zinc-500 shrink-0 mt-0.5" />
+                    <span className="text-zinc-300 text-sm md:text-base leading-snug">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="w-full max-w-md pt-6 border-t border-zinc-800">
+                <div className="text-[10px] text-zinc-500 mb-2 uppercase tracking-[0.4em] font-bold">Инвестиция</div>
+                <div className="text-4xl md:text-5xl font-black text-white mb-10 tracking-tighter italic">
+                  {CONTENT.block6.price}
+                </div>
                 
-                // Прокрутка к началу блока при открытии
-                setTimeout(() => {
-                    content.parentElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 300);
-            }
-        }
+                <button 
+                  onClick={() => setShowModal(true)}
+                  className="w-full group inline-flex items-center justify-center gap-2 bg-white text-zinc-950 px-8 py-5 text-lg font-black uppercase tracking-widest rounded-2xl hover:bg-zinc-200 transition-all shadow-md cursor-pointer"
+                >
+                  {CONTENT.block6.buttonText}
+                  <IconArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </div>
 
-        function openModal() { 
-            const modal = document.getElementById('payment-modal');
-            modal.classList.remove('hidden'); 
-            modal.classList.add('flex'); 
-            document.body.style.overflow = 'hidden'; // Запрет прокрутки под модалкой
-        }
-        function closeModal() { 
-            const modal = document.getElementById('payment-modal');
-            modal.classList.add('hidden'); 
-            modal.classList.remove('flex'); 
-            document.body.style.overflow = 'auto';
-        }
-        function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }); }
+            </div>
+          </div>
+        </AccordionBlock>
 
-        window.addEventListener('scroll', () => {
-            const btn = document.getElementById('scroll-top');
-            if (window.scrollY > 600) {
-                btn.classList.remove('translate-y-48', 'opacity-0');
-                btn.classList.add('translate-y-0', 'opacity-100');
-            } else {
-                btn.classList.add('translate-y-48', 'opacity-0');
-                btn.classList.remove('translate-y-0', 'opacity-100');
-            }
-        });
+      </main>
 
-        // Закрытие модального окна по клику вне его контента
-        window.addEventListener('click', (e) => {
-            const modal = document.getElementById('payment-modal');
-            if (e.target === modal) closeModal();
-        });
-    </script>
-</body>
-</html>
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#09090B]/90 backdrop-blur-md transition-opacity">
+          <div className="bg-[#18181B] border border-[#27272A] max-w-lg w-full rounded-[2.5rem] shadow-2xl overflow-hidden relative animate-in fade-in zoom-in-95 duration-200">
+            <button 
+              onClick={() => setShowModal(false)}
+              className="absolute top-6 right-6 p-2 text-zinc-500 hover:text-white transition-colors bg-[#27272A]/50 rounded-full cursor-pointer z-10"
+            >
+              <IconX className="w-5 h-5" />
+            </button>
+            
+            <div className="p-8 md:p-12">
+              <h3 className="text-xl md:text-2xl font-black text-white mb-8 uppercase tracking-tighter italic">Оформление доступа</h3>
+              
+              <div className="bg-[#27272A]/30 border border-[#27272A] p-6 md:p-8 rounded-2xl mb-8">
+                <p className="text-zinc-400 text-sm mb-4 italic">{CONTENT.paymentModal.instruction}</p>
+                <p className="text-lg md:text-2xl font-mono font-bold text-white tracking-widest whitespace-pre-wrap">
+                  {CONTENT.paymentModal.requisites}
+                </p>
+              </div>
+
+              <div className="space-y-4">
+                {CONTENT.paymentModal.details.map((detail, idx) => (
+                  <div key={idx} className="flex items-center gap-3 text-zinc-400 text-sm md:text-base">
+                    <div className="w-1.5 h-1.5 bg-blue-500 rounded-full shrink-0 shadow-[0_0_10px_rgba(59,130,246,0.5)]"></div>
+                    <span className="font-medium">{detail}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-10 pt-8 border-t border-zinc-800 text-center text-zinc-500 text-[10px] uppercase tracking-[0.3em] font-bold italic leading-relaxed">
+                Чек об оплате пришлите <br/> в ответном сообщении.
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-6 right-6 md:bottom-8 md:right-8 p-3 md:p-4 bg-[#27272A] text-white rounded-full shadow-lg hover:bg-[#3F3F46] transition-all duration-300 z-40 border border-zinc-700/50 cursor-pointer ${
+          showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0 pointer-events-none'
+        }`}
+        aria-label="Наверх"
+      >
+        <IconArrowUp className="w-5 h-5" />
+      </button>
+
+    </div>
+  );
+}
