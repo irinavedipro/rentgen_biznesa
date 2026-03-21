@@ -1,366 +1,508 @@
-import React, { useState, useEffect } from 'react';
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рентген бизнеса — Дмитрий</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000;
+            color: #fff;
+            -webkit-font-smoothing: antialiased;
+        }
 
-// Иконки через SVG для 100% гарантии отображения
-const IconChevron = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-);
-const IconLock = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-);
-const IconArrowUp = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg>
-);
-const IconArrowRight = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-);
-const IconShield = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
-);
-const IconX = ({ className }) => (
-  <svg className={className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
-);
+        .mono { font-family: 'JetBrains Mono', monospace; }
 
-export default function App() {
-  const [openBlocks, setOpenBlocks] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [showScrollTop, setShowScrollTop] = useState(false);
+        /* Анимация рентген-линии: проходит 2 раза по картинке и исчезает */
+        .x-ray-line {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #3b82f6, #fff, #3b82f6, transparent);
+            box-shadow: 0 0 25px #3b82f6;
+            z-index: 40;
+            opacity: 0;
+            pointer-events: none;
+            animation: scan 3s ease-in-out 2 forwards;
+        }
 
-  const toggleBlock = (id) => {
-    setOpenBlocks(prev => ({ ...prev, [id]: !prev[id] }));
-  };
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
 
-  useEffect(() => {
-    const handleScroll = () => setShowScrollTop(window.scrollY > 400);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+        /* Аккордеон */
+        .accordion-content {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        .accordion-item.active .accordion-content {
+            grid-template-rows: 1fr;
+        }
 
-  const blocks = [
-    {
-      id: 1,
-      title: "Точка А",
-      content: (
-        <div className="space-y-4 text-zinc-400">
-          <p className="font-medium text-lg text-zinc-200 tracking-tight">Дмитрий, смотри, что я вижу по тому, что ты рассказал</p>
-          <p>Ты сейчас не в кризисе. Ты сейчас в системе, которая работает вот так: ты постоянно закрываешь дыры.</p>
-          <ul className="list-disc pl-5 space-y-2">
-            <li>деньги приходят не из системы, а из напряжения</li>
-            <li>ты держишь всё на себе</li>
-            <li>у тебя есть люди, оборудование, ресурсы, но они не складываются в управляемую модель</li>
-          </ul>
-          <div className="bg-blue-600/10 p-6 rounded-2xl border-l-4 border-blue-500 my-6">
-            <p className="font-medium text-zinc-100 mb-2 italic">И самое важное:</p>
-            <p className="text-zinc-200">ты каждый день действуешь, но это не даёт тебе выхода.</p>
-          </div>
-          <p>Это не «плохо работает бизнес». Это другой уровень проблемы.</p>
-          <div className="mt-8">
-            <p className="text-zinc-200 font-medium mb-4 uppercase text-xs tracking-widest opacity-60">Есть два состояния бизнеса:</p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800">
-                <p className="text-blue-400 font-bold mb-2 text-sm uppercase italic">1. Управление системой</p>
-                <p className="text-xs leading-relaxed">Есть понятный поток клиентов, оборотка и решения на несколько шагов вперёд.</p>
-              </div>
-              <div className="p-5 bg-zinc-900/60 rounded-2xl border border-zinc-800">
-                <p className="text-blue-400 font-bold mb-2 text-sm uppercase italic">2. Тушение пожаров</p>
-                <p className="text-xs leading-relaxed">Нет запаса, всё завязано на тебе, решения принимаются из «надо срочно».</p>
-              </div>
-            </div>
-          </div>
+        .accordion-arrow {
+            transition: transform 0.4s ease;
+        }
+        .accordion-item.active .accordion-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Текстовые стили */
+        .content-text p { margin-bottom: 1rem; }
+        .content-text ul { margin-bottom: 1.25rem; }
+        .content-text li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .content-text li::before {
+            content: "—";
+            position: absolute;
+            left: 0;
+            color: #3b82f6;
+        }
+
+        /* Кнопка */
+        .cta-button {
+            background-color: #3b82f6;
+            color: #fff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        .cta-button:hover {
+            background-color: #2563eb;
+            transform: translateY(-1px);
+        }
+
+        /* Модальное окно */
+        #modal {
+            display: none;
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+        }
+        #modal.active {
+            display: flex;
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-500/30">
+
+    <!-- Hero Screen -->
+    <section class="relative min-h-screen w-full flex flex-col items-center px-6 overflow-hidden bg-black pt-12 pb-24">
+        
+        <!-- Картинка в самом верху с ограниченной шириной -->
+        <div class="relative w-full max-w-[320px] aspect-square mb-12 flex items-center justify-center">
+            <div class="x-ray-line"></div>
+            <img src="xray.jfif" 
+                 alt="Рентген мозга" 
+                 class="w-full h-full object-contain brightness-110 contrast-110 opacity-90">
         </div>
-      )
-    },
-    {
-      id: 2,
-      title: "Где ты сейчас на самом деле",
-      content: (
-        <div className="space-y-6 text-zinc-400">
-          <p className="text-zinc-200 font-medium">Любой бизнес (и человек) проходит через три состояния:</p>
-          <div className="space-y-4">
-            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
-              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">1. Хаос</p>
-              <div className="space-y-3">
-                <p className="text-sm italic text-zinc-300">Как это выглядит:</p>
-                <ul className="list-disc pl-5 text-xs space-y-1">
-                  <li>постоянно что-то горит</li>
-                  <li>решения принимаются «надо срочно»</li>
-                  <li>деньги приходят рывками</li>
-                  <li>нет запаса</li>
-                  <li>всё держится на тебе</li>
-                  <li>много движений — мало результата</li>
-                </ul>
-              </div>
-            </div>
-            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
-              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">2. Стабилизация</p>
-              <div className="space-y-3">
-                <p className="text-sm italic text-zinc-300">Как это выглядит:</p>
-                <ul className="list-disc pl-5 text-xs space-y-1">
-                  <li>есть понятный поток клиентов</li>
-                  <li>есть оборотка</li>
-                  <li>есть структура</li>
-                  <li>решения не из срочности, а из расчёта</li>
-                  <li>ты не тушишь пожары каждый день</li>
-                </ul>
-                <p className="text-xs text-blue-400 font-medium mt-2 italic">здесь ещё нет масштабирования, это уровень «собрал систему, она держится»</p>
-              </div>
-            </div>
-            <div className="bg-zinc-800/30 p-6 rounded-3xl border border-zinc-800">
-              <p className="font-black text-zinc-100 mb-3 uppercase text-xs tracking-[0.2em] italic">3. Рост / Система</p>
-              <p className="text-xs leading-relaxed">Бизнес работает не на тебе, есть управляемая модель, можно планировать вперёд. Масштаб — это следствие системы.</p>
-            </div>
-          </div>
-          <div className="p-6 bg-zinc-950 rounded-3xl border border-zinc-800 mt-6">
-            <p className="text-zinc-100 font-medium italic">Ты как будто между уровнями застрял: голова уже в следующем уровне, а бизнес — в предыдущем. Твоя старая модель больше не тянет твой уровень.</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 3,
-      title: "Почему это не решается действиями",
-      content: (
-        <div className="space-y-6 text-zinc-400">
-          <div className="bg-zinc-900 border border-zinc-800 p-8 rounded-[2.5rem] relative overflow-hidden">
-            <p className="text-zinc-100 font-black text-2xl leading-tight italic relative z-10">Ключевая мысль: ты пытаешься решить системную проблему операционными действиями.</p>
-          </div>
-          <p>Если бы проблема была: «не хватает клиентов» — то реклама бы это решила. Но у тебя нет оборотки, нет устойчивого потока и нет структуры продаж.</p>
-          <div className="grid gap-4 py-4">
-            <div className="p-6 bg-zinc-950 rounded-2xl border border-zinc-800">
-              <p className="text-zinc-400 uppercase text-[10px] tracking-widest font-black mb-2">Сейчас:</p>
-              <p className="text-zinc-100 font-medium text-lg leading-tight">Бизнес работает как набор действий (купили, продали, договорились, перекрыли).</p>
-            </div>
-            <div className="p-6 bg-zinc-950 rounded-2xl border border-blue-500/20">
-              <p className="text-blue-400 uppercase text-[10px] tracking-widest font-black mb-2">Должен работать как:</p>
-              <p className="text-zinc-100 font-medium text-lg leading-tight italic">Система, где заранее понятно, откуда приходят клиенты и как они доходят до сделки.</p>
-            </div>
-          </div>
-          <div className="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 text-center">
-            <p className="italic text-zinc-200 leading-relaxed">Пока нет архитектуры — любые действия только усиливают хаос.</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 4,
-      title: "Есть точка, где это можно собрать",
-      content: (
-        <div className="space-y-6 text-zinc-400">
-          <p>Твой бизнес сейчас в старой логике, которая больше не даёт результата. Это собирается только целиком.</p>
-          <div className="space-y-3">
-            {[
-              "Определяем, что у тебя за бизнес на самом деле (не «пиломатериалы», а модель)",
-              "Находим, где он сейчас ломается (где теряются деньги, где нет связки)",
-              "Собираем новую модель (как приходят деньги, логика продаж, структура)",
-              "Фиксируем архитектуру для управления"
-            ].map((text, i) => (
-              <div key={i} className="flex gap-4 p-5 bg-zinc-900/40 rounded-2xl border border-zinc-800/60 items-center">
-                <span className="font-black text-blue-500 text-lg">0{i + 1}</span>
-                <p className="text-sm text-zinc-300 leading-snug">{text}</p>
-              </div>
-            ))}
-          </div>
-          <div className="p-8 bg-blue-600/10 rounded-[2rem] border border-blue-500/30 text-center shadow-lg">
-            <p className="text-zinc-100 font-black italic uppercase tracking-tighter text-xl">Либо ты один раз собираешь систему и дальше уже растёшь из неё.</p>
-          </div>
-        </div>
-      )
-    },
-    {
-      id: 5,
-      title: "Честные рекомендации",
-      content: (
-        <div className="space-y-8 text-zinc-400">
-          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
-            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">1. Фокус</p>
-            <p className="text-sm leading-relaxed">Выбери одно направление, которое быстрее всего превращается в деньги. Судя по твоей ситуации — это сухой строганный пиломатериал (наличие + скорость).</p>
-          </div>
-          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
-            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">2. Деньги</p>
-            <p className="text-sm leading-relaxed">Переверни модель: продавай под заказ с предоплатой. Тебе сейчас важна не прибыль с куба, а чтобы деньги возвращались в оборот быстрее.</p>
-          </div>
-          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
-            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">3. Продажи</p>
-            <p className="text-sm leading-relaxed">Зафиксируй простую модель: Лид пришёл — наличие / сроки — цена — дожим через звонок — предоплата — запуск.</p>
-          </div>
-          <div className="space-y-3 border-l-2 border-zinc-800 pl-6">
-            <p className="text-zinc-100 font-black uppercase text-xs tracking-widest italic mb-2">4. Люди и ИИ</p>
-            <p className="text-sm leading-relaxed">Возьми 1–2 человека на простые задачи (Авито, ответы). Дай им ChatGPT и конкретные задачи. Люди не должны думать — у них должны быть инструменты.</p>
-          </div>
-          <div className="bg-zinc-950 p-6 rounded-2xl border border-zinc-800 mt-6 text-center">
-            <p className="text-zinc-400 text-xs italic uppercase tracking-widest">Твоя задача сейчас — собрать устойчивую основу.</p>
-          </div>
-        </div>
-      )
-    }
-  ];
 
-  return (
-    <div className="min-h-screen bg-[#09090B] text-zinc-100 font-sans selection:bg-blue-600/30">
-      <div className="fixed top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent blur-sm z-50 pointer-events-none"></div>
+        <!-- Контент Hero -->
+        <div class="relative z-20 text-center max-w-4xl">
+            <h1 class="text-4xl md:text-7xl font-bold tracking-tight mb-4 text-white">
+                Рентген бизнеса
+            </h1>
+            <p class="text-lg md:text-2xl text-blue-400 font-semibold mb-8 max-w-2xl mx-auto">
+                Ты не видишь, где у тебя узкое место, пока находишься внутри системы.
+            </p>
+            <div class="h-px w-20 bg-blue-500/50 mx-auto mb-8"></div>
+            <p class="text-base md:text-xl text-gray-200 font-light max-w-xl mx-auto leading-relaxed">
+                Я показываю, что на самом деле держит твой бизнес в напряжении, и собираю решение под твою ситуацию.
+            </p>
+        </div>
 
-      <header className="max-w-4xl mx-auto px-6 pt-24 pb-16 relative">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 blur-[120px] pointer-events-none rounded-full"></div>
-        <div className="space-y-8 relative z-10 text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest">
-            Диагностика системы
-          </div>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-tight tracking-tighter text-white italic uppercase">
-            Рентген бизнеса
-          </h1>
-          <div className="text-xl md:text-2xl text-zinc-400 leading-relaxed max-w-2xl font-light">
-            <p>Ты не видишь, где у тебя проблема, пока смотришь на бизнес «снаружи».</p>
-            <p className="mt-4 text-zinc-100 font-medium">Я показываю, что происходит на самом деле, и собираю решение под тебя.</p>
-          </div>
-          <div className="pt-8">
-            <button 
-              onClick={() => document.getElementById('01').scrollIntoView({ behavior: 'smooth' })}
-              className="group inline-flex items-center justify-center gap-4 bg-white text-zinc-950 px-10 py-5 text-xl font-black uppercase tracking-tighter rounded-2xl hover:bg-blue-50 transition-all shadow-[0_20px_50px_rgba(255,255,255,0.05)] active:scale-95 cursor-pointer"
-            >
-              Разобрать ситуацию
-              <IconArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+        <div class="mt-16 opacity-30 animate-bounce">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                <path d="M7 10L12 15L17 10" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="max-w-2xl mx-auto px-6 py-12 space-y-6">
+        
+        <!-- Блок 1 -->
+        <div class="accordion-item border border-white/10 rounded-2xl bg-white/5">
+            <button onclick="toggleAccordion(this)" class="w-full p-6 flex justify-between items-center text-left group">
+                <span class="text-lg md:text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    1. Что с твоим бизнесом происходит сейчас
+                </span>
+                <svg class="accordion-arrow w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
             </button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto px-6 pb-32">
-        {blocks.map((block, idx) => {
-          const num = String(idx + 1).padStart(2, '0');
-          const isOpen = openBlocks[block.id];
-          return (
-            <div key={block.id} id={num} className="bg-[#18181B] border border-zinc-800/80 rounded-[2.5rem] overflow-hidden mb-6 transition-all duration-300 shadow-xl">
-              <button
-                onClick={() => toggleBlock(block.id)}
-                className="w-full flex justify-between items-center p-6 md:p-10 text-left group cursor-pointer hover:bg-[#1C1C21] transition-colors"
-              >
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-[1.5rem] bg-[#27272A] text-blue-400 font-black text-xl shrink-0 border border-zinc-700/50 group-hover:border-blue-500/30 transition-colors">
-                    {num}
-                  </div>
-                  <h2 className="text-xl md:text-3xl font-black text-zinc-100 tracking-tighter uppercase italic">
-                    {block.title}
-                  </h2>
-                </div>
-                <IconChevron 
-                  className={`w-6 h-6 text-zinc-500 transition-transform duration-500 ${isOpen ? 'rotate-180' : ''}`} 
-                />
-              </button>
-              <div className={`grid transition-all duration-500 ease-in-out ${isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'}`}>
-                <div className="overflow-hidden">
-                  <div className="px-6 md:px-10 pb-10 pt-2 border-t border-zinc-800/50">
-                    {block.content}
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-
-        {/* Сборка Платный пакет */}
-        <div className="bg-[#18181B] border border-blue-500/20 rounded-[3rem] overflow-hidden mt-12 shadow-2xl relative">
-          <div className="p-8 md:p-14 text-left">
-            <h2 className="text-3xl md:text-5xl font-black text-white uppercase italic tracking-tighter mb-8">Платный пакет</h2>
-            <div className="space-y-8 text-zinc-400">
-              <p className="text-xl leading-relaxed text-zinc-200">За 3–4 часа навигационной сессии я покажу, где твои деньги, где потери, и соберу понятную модель, как тебе дальше работать.</p>
-              <div className="grid gap-6 sm:grid-cols-2">
-                <div className="p-6 bg-zinc-900/60 rounded-3xl border border-zinc-800">
-                  <p className="text-zinc-100 font-black uppercase text-[10px] tracking-widest mb-2 italic">Формат</p>
-                  <p className="text-sm leading-relaxed">Ты получаешь это в виде структурированного документа, к которому можно возвращаться.</p>
-                </div>
-                <div className="p-6 bg-zinc-900/60 rounded-3xl border border-zinc-800">
-                  <p className="text-zinc-100 font-black uppercase text-[10px] tracking-widest mb-2 italic">Результат</p>
-                  <p className="text-sm leading-relaxed">У тебя появляется понятное направление, ты перестаёшь метаться между вариантами.</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-12 relative overflow-hidden rounded-[2.5rem] border border-zinc-800 bg-[#131315]">
-              <div className="p-8 md:p-14 bg-[#18181B]/60 backdrop-blur-2xl flex flex-col items-center text-center">
-                <div className="w-20 h-20 bg-[#27272A] rounded-[2rem] flex items-center justify-center mb-8 shadow-xl border border-zinc-700/50">
-                  <IconLock className="w-10 h-10 text-blue-400" />
-                </div>
-                <h3 className="text-2xl md:text-3xl font-black text-white mb-10 max-w-md uppercase tracking-tighter italic leading-snug">
-                  Полная сборка под тебя — доступ после оплаты
-                </h3>
-                <div className="w-full max-w-lg text-left space-y-4 mb-12 bg-zinc-950/50 p-8 rounded-[2rem] border border-zinc-800 shadow-inner">
-                  {[
-                    "Понимание, на чём тебе зарабатывать сейчас",
-                    "Готовое предложение под рынок",
-                    "Разбор рынка (Марий Эл / Татарстан / Чувашия)",
-                    "Разбор конкурентов и слабых мест",
-                    "Чёткое решение по земле и инвестору",
-                    "Где и как внедрить ИИ в твою работу"
-                  ].map((text, i) => (
-                    <div key={i} className="flex items-start gap-4">
-                      <IconShield className="w-5 h-5 text-blue-500 shrink-0 mt-1" />
-                      <span className="text-zinc-300 text-sm md:text-lg leading-snug font-medium italic">{text}</span>
+            <div class="accordion-content">
+                <div class="min-h-0">
+                    <div class="px-6 pb-8 content-text text-gray-300 font-light">
+                        <ul>
+                            <li>ты закрываешь дыры</li>
+                            <li>деньги приходят не из системы, а из напряжения</li>
+                            <li>всё завязано на тебе</li>
+                            <li>ресурсов много, но в модель они не собираются</li>
+                        </ul>
+                        <div class="mt-6 p-5 bg-blue-500/10 border-l-2 border-blue-500 rounded-r-xl">
+                            <p class="text-white italic mb-0">
+                                Ты не в «просто сложном периоде». <br>
+                                Ты в системе, которая больше не даёт другого результата.
+                            </p>
+                        </div>
                     </div>
-                  ))}
                 </div>
-                <div className="w-full max-w-lg pt-8 border-t border-zinc-800">
-                  <div className="text-[10px] text-zinc-500 mb-2 uppercase tracking-[0.5em] font-black italic">Инвестиция</div>
-                  <div className="text-5xl md:text-7xl font-black text-white mb-12 tracking-tighter italic">50 000 руб.</div>
-                  <button 
-                    onClick={() => { setShowModal(true); document.body.style.overflow = 'hidden'; }}
-                    className="w-full group inline-flex items-center justify-center gap-3 bg-white text-zinc-950 px-10 py-6 text-2xl font-black uppercase tracking-widest rounded-[2rem] hover:bg-blue-50 transition-all shadow-[0_20px_40px_rgba(255,255,255,0.05)] active:scale-95 cursor-pointer"
-                  >
-                    Получить доступ
-                    <IconArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </div>
-              </div>
             </div>
-          </div>
         </div>
-      </main>
 
-      {showModal && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#09090B]/95 backdrop-blur-xl transition-all duration-300">
-          <div className="bg-[#18181B] border border-[#27272A] max-w-lg w-full rounded-[3rem] shadow-[0_0_100px_rgba(59,130,246,0.1)] relative overflow-hidden animate-in fade-in zoom-in-95 duration-300 flex flex-col max-h-[90vh]">
-            <button 
-              onClick={() => { setShowModal(false); document.body.style.overflow = 'auto'; }}
-              className="absolute top-8 right-8 p-3 text-zinc-500 hover:text-white transition-colors bg-[#27272A]/50 rounded-full cursor-pointer z-50 shadow-lg"
-            >
-              <IconX className="w-6 h-6" />
+        <!-- Блок 2 -->
+        <div class="accordion-item border border-white/10 rounded-2xl bg-white/5">
+            <button onclick="toggleAccordion(this)" class="w-full p-6 flex justify-between items-center text-left group">
+                <span class="text-lg md:text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    2. Где ты застрял на самом деле
+                </span>
+                <svg class="accordion-arrow w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
             </button>
-            <div className="p-10 md:p-14 overflow-y-auto">
-              <h3 className="text-3xl font-black text-white mb-10 uppercase tracking-tighter italic text-center">Оформление доступа</h3>
-              <div className="bg-[#27272A]/30 border border-[#27272A] p-8 rounded-[2.5rem] mb-10 shadow-inner text-center">
-                <p className="text-zinc-500 text-[10px] uppercase tracking-widest mb-4 font-bold italic">Оплата переводом на карту Т-Банка:</p>
-                <p className="text-xl md:text-3xl font-mono font-bold text-white tracking-widest whitespace-pre-wrap leading-relaxed">
-                  2200 7021 1957 4882
-                </p>
-                <p className="text-zinc-500 text-[10px] mt-4 font-black uppercase tracking-widest opacity-60">Вединеева Ирина Михайловна</p>
-              </div>
-              <div className="space-y-6">
-                {[
-                  "Я работаю как самозанятая",
-                  "После оплаты отправляю чек и договор",
-                  "Согласовываем дату сессии",
-                  "Через 2 дня вы получаете готовое решение"
-                ].map((text, idx) => (
-                  <div key={idx} className="flex items-center gap-4 text-zinc-300 text-sm md:text-lg">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
-                    <span className="font-medium leading-snug italic">{text}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-12 pt-10 border-t border-zinc-800 text-center">
-                <p className="text-zinc-600 text-[10px] uppercase tracking-[0.4em] font-black italic leading-relaxed">Чек об оплате пришлите в ответном сообщении.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            <div class="accordion-content">
+                <div class="min-h-0">
+                    <div class="px-6 pb-8 content-text text-gray-300">
+                        <div class="mb-8 p-6 bg-black/40 rounded-xl flex items-center justify-between text-[10px] uppercase tracking-widest text-gray-500 font-bold">
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="mb-2">Хаос</span>
+                                <div class="w-2 h-2 rounded-full bg-blue-900"></div>
+                            </div>
+                            <div class="h-px bg-white/10 flex-1 mx-2"></div>
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="mb-2 text-blue-400">Стабилизация</span>
+                                <div class="w-3 h-3 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]"></div>
+                            </div>
+                            <div class="h-px bg-white/10 flex-1 mx-2"></div>
+                            <div class="flex flex-col items-center flex-1">
+                                <span class="mb-2">Система</span>
+                                <div class="w-2 h-2 rounded-full border border-white/20"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-3 mb-6 font-light">
+                            <p><strong>хаос</strong> — всё срочно, всё на тебе</p>
+                            <p><strong>стабилизация</strong> — есть поток, структура, оборотка</p>
+                            <p><strong>система</strong> — бизнес работает не только на твоём напряжении</p>
+                        </div>
 
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className={`fixed bottom-8 right-8 p-5 bg-[#27272A] text-white rounded-full shadow-2xl hover:bg-[#3F3F46] transition-all duration-500 z-40 border border-zinc-700/50 cursor-pointer ${
-          showScrollTop ? 'translate-y-0 opacity-100' : 'translate-y-24 opacity-0 pointer-events-none'
-        }`}
-      >
-        <IconArrowUp className="w-6 h-6" />
-      </button>
+                        <div class="space-y-3 text-white font-light italic border-t border-white/10 pt-6 text-xl">
+                            <p>ты не просто в хаосе — ты застрял между уровнями</p>
+                            <p>ты уже видишь следующий уровень</p>
+                            <p>но ты всё ещё управляешь им из логики выживания</p>
+                            <p>поэтому возникает напряжение: понимание есть, а опоры нет</p>
+                        </div>
+
+                        <p class="mt-6 text-blue-400 text-sm">
+                            В этой модели бизнес не стабилизируется. <br>
+                            Он будет постоянно возвращаться в ту же точку.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 3 -->
+        <div class="accordion-item border border-white/10 rounded-2xl bg-white/5">
+            <button onclick="toggleAccordion(this)" class="w-full p-6 flex justify-between items-center text-left group">
+                <span class="text-lg md:text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    3. Почему старый способ больше не работает
+                </span>
+                <svg class="accordion-arrow w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="accordion-content">
+                <div class="min-h-0">
+                    <div class="px-6 pb-8 content-text text-gray-300 font-light">
+                        <p class="text-white font-semibold mb-4 italic">Да, всё решается действиями — но не теми же самыми действиями внутри той же конструкции.</p>
+                        <ul>
+                            <li>можно искать клиентов;</li>
+                            <li>можно искать РОПа;</li>
+                            <li>можно искать инвестора;</li>
+                            <li>но если нет модели, это не удержится.</li>
+                        </ul>
+                        <div class="my-6 p-5 bg-white/5 rounded-xl border border-white/5 italic text-white text-sm">
+                            проблема не в том, что ты мало делаешь <br>
+                            ты пытаешься вытянуть новую сложность старым способом <br>
+                            поэтому любое усилие уходит не в рост, а в удержание
+                        </div>
+                        <div class="mt-6">
+                            <p class="text-blue-500 font-bold uppercase text-[10px] tracking-widest mb-3">если ничего не менять:</p>
+                            <ul class="space-y-1 text-sm">
+                                <li>– усилий будет становиться больше</li>
+                                <li>– денег — не больше</li>
+                                <li>– и всё так же будет держаться на тебе</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 4 -->
+        <div class="accordion-item border border-white/10 rounded-2xl bg-white/5">
+            <button onclick="toggleAccordion(this)" class="w-full p-6 flex justify-between items-center text-left group">
+                <span class="text-lg md:text-xl font-semibold text-white group-hover:text-blue-400 transition-colors">
+                    4. Что тебе нужно делать сейчас
+                </span>
+                <svg class="accordion-arrow w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="accordion-content">
+                <div class="min-h-0">
+                    <div class="px-6 pb-8 content-text text-gray-300 font-light">
+                        <div class="space-y-8">
+                            <div>
+                                <h4 class="text-white font-bold mb-1">1. выбрать одно денежное ядро</h4>
+                                <p class="text-sm">какой продукт сейчас быстрее всего превращается в деньги?</p>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">2. Остановить распыление</h4>
+                                <p class="text-sm mb-2">Не тянуть одновременно:</p>
+                                <ul class="text-xs opacity-70">
+                                    <li>производство, стройку, поселок, инвестора, поиск волшебного РОПа.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">3. Перестать быть единственной опорой бизнеса</h4>
+                                <p class="text-sm">Вынимать из себя повторяемые функции. передать рутину через ИИ и помощника, а не держать всё в голове.</p>
+                            </div>
+                            <div>
+                                <h4 class="text-white font-bold mb-1">4. Использовать сильные активы, которые уже есть</h4>
+                                <p class="text-sm">производство, люди, оборудование, опыт, действующая база.</p>
+                            </div>
+                        </div>
+                        <div class="mt-10 p-6 bg-blue-600 rounded-xl text-white font-semibold text-lg leading-tight shadow-lg shadow-blue-500/20">
+                            Твоя задача сейчас — не расширяться. <br>
+                            Твоя задача — собрать устойчивую опору на том, что уже работает.
+                        </div>
+                        <div class="mt-10 pt-8 border-t border-white/5 space-y-4 italic text-sm">
+                            <p>Ты уже видишь, что происходит.</p>
+                            <p>Но это ещё не решение.</p>
+                            <p class="text-white not-italic font-semibold text-base uppercase tracking-wide">Решение — это собрать это в конкретную модель под твою ситуацию.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Блок 5 -->
+        <div class="accordion-item border-2 border-blue-500/40 rounded-2xl bg-blue-500/5">
+            <button onclick="toggleAccordion(this)" class="w-full p-6 flex justify-between items-center text-left group">
+                <span class="text-lg md:text-2xl font-bold text-white transition-colors">
+                    5. Что я могу для тебя собрать
+                </span>
+                <svg class="accordion-arrow w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+            </button>
+            <div class="accordion-content">
+                <div class="min-h-0">
+                    <div class="px-6 pb-10 content-text text-gray-300 font-light">
+                        <div class="mb-8">
+                            <p class="text-white font-bold mb-3 uppercase text-[10px] tracking-widest text-blue-400">после этой работы у тебя будет:</p>
+                            <ul class="text-sm">
+                                <li>понимание, на чем ты реально зарабатываешь</li>
+                                <li>решение, что убрать</li>
+                                <li>схема, как получать деньги</li>
+                                <li>ясность, куда двигаться</li>
+                            </ul>
+                        </div>
+
+                        <div class="space-y-4 mb-8 py-6 border-y border-white/10">
+                            <p class="italic text-gray-400 text-sm">Это не консультация. <br> Это сборка решения под твою ситуацию.</p>
+                            <p class="text-white text-xl font-bold">Навигационная сессия + сборка решения под твой бизнес</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="p-4 bg-white/5 rounded-xl">
+                                <p class="uppercase text-[9px] tracking-widest text-blue-500 font-bold mb-2 text-center md:text-left">Формат:</p>
+                                <p class="text-white text-sm text-center md:text-left">3 часа глубокой работы <br> через 2 дня — готовая концепция</p>
+                            </div>
+                            <div class="p-4 bg-white/5 rounded-xl text-xs">
+                                <p class="uppercase text-[9px] tracking-widest text-blue-500 font-bold mb-2">Что внутри</p>
+                                <ul class="space-y-1 opacity-80">
+                                    <li>ядро продукта, аудитория, логика продаж, рынок, офферы, внедрение ИИ.</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="mb-10">
+                            <p class="text-white font-bold mb-3 uppercase text-[10px] tracking-widest text-blue-400">В итоге у тебя будет:</p>
+                            <ul class="text-sm">
+                                <li>один понятный продукт</li>
+                                <li>понятная схема продаж</li>
+                                <li>фокус</li>
+                                <li>и конкретный план действий на ближайший период</li>
+                            </ul>
+                        </div>
+
+                        <p class="mb-10 italic text-gray-400 text-sm text-center">
+                            Если ты хочешь перестать удерживать и начать управлять — это следующий шаг. <br>
+                            Само это не соберётся.
+                        </p>
+
+                        <div class="flex flex-col items-center gap-6">
+                            <div class="text-center">
+                                <p class="text-4xl font-bold text-white tracking-tight">50 000 рублей</p>
+                            </div>
+                            <button onclick="showModal()" class="cta-button w-full md:w-auto px-10 py-4 rounded-full font-bold uppercase tracking-widest text-xs">
+                                Получить полную сборку
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-12 text-center border-t border-white/5">
+        <div class="text-gray-700 text-[10px]">© 2024 Вединеева Ирина Михайловна.</div>
+    </footer>
+
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 items-center justify-center p-6 bg-black/95">
+        <div class="bg-[#0a0a0a] border border-white/10 p-8 md:p-12 rounded-[32px] max-w-lg w-full relative text-center shadow-2xl overflow-hidden">
+            <!-- Декор-свет в модалке -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl"></div>
+            
+            <button onclick="hideModal()" class="absolute top-6 right-6 text-gray-500 hover:text-white transition-colors">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+            
+            <div class="relative z-10 space-y-8">
+                <p class="text-gray-200 text-lg font-light leading-relaxed">после оплаты вышлю договор, чек и назначу дату навигационной сессии.</p>
+                
+                <div class="p-6 bg-blue-500/5 rounded-2xl border border-blue-500/10 space-y-4">
+                    <p class="text-[9px] uppercase tracking-widest text-blue-400 font-bold">оплату принимаю на карту т-банка:</p>
+                    <p class="text-xl md:text-2xl text-white font-mono tracking-wider selection:bg-blue-500">2 200 7021 1957 4882</p>
+                    <p class="text-sm font-medium text-gray-500 uppercase tracking-widest">ВЕДИНЕЕВА ИРИНА МИХАЙЛОВНА</p>
+                </div>
+
+                <div class="pt-6 border-t border-white/5">
+                    <p class="text-xs text-gray-400 mb-4 tracking-wide uppercase">предложение действует до 25.03.2026</p>
+                    
+                    <!-- Таймер -->
+                    <div id="countdown" class="mono flex justify-center gap-4 text-white">
+                        <div class="flex flex-col">
+                            <span id="days" class="text-2xl font-bold">00</span>
+                            <span class="text-[8px] uppercase tracking-widest text-gray-500">дней</span>
+                        </div>
+                        <span class="text-2xl opacity-30 mt-[-4px]">:</span>
+                        <div class="flex flex-col">
+                            <span id="hours" class="text-2xl font-bold">00</span>
+                            <span class="text-[8px] uppercase tracking-widest text-gray-500">часов</span>
+                        </div>
+                        <span class="text-2xl opacity-30 mt-[-4px]">:</span>
+                        <div class="flex flex-col">
+                            <span id="minutes" class="text-2xl font-bold">00</span>
+                            <span class="text-[8px] uppercase tracking-widest text-gray-500">минут</span>
+                        </div>
+                        <span class="text-2xl opacity-30 mt-[-4px]">:</span>
+                        <div class="flex flex-col">
+                            <span id="seconds" class="text-2xl font-bold text-blue-500">00</span>
+                            <span class="text-[8px] uppercase tracking-widest text-gray-500">секунд</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  );
-}
+
+    <script>
+        function toggleAccordion(element) {
+            const item = element.parentElement;
+            const isActive = item.classList.contains('active');
+            if (isActive) {
+                item.classList.remove('active');
+            } else {
+                item.classList.add('active');
+            }
+        }
+
+        function showModal() {
+            document.getElementById('modal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            startTimer();
+        }
+
+        function hideModal() {
+            document.getElementById('modal').classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target == modal) {
+                hideModal();
+            }
+        }
+
+        // Таймер
+        let timerInterval;
+        function startTimer() {
+            const targetDate = new Date('March 25, 2026 23:59:59').getTime();
+            
+            if (timerInterval) clearInterval(timerInterval);
+
+            timerInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timerInterval);
+                    document.getElementById('countdown').innerHTML = "СРОК ИСТЕК";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = days.toString().padStart(2, '0');
+                document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        // Анимация при скролле
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.accordion-item').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'all 0.6s ease-out';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
